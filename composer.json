@@ -1,0 +1,50 @@
+{
+	"name": "wwy/laravel-uploader",
+	"description": "集成cos、oss、七牛云、本地上传的包",
+	"keywords": [
+		"wwy",
+		"laravel-uploader"
+	],
+	"homepage": "https://github.com/w872730491w/laravel-uploader",
+	"license": "MIT",
+	"type": "library",
+	"authors": [
+		{
+			"name": "wwy",
+			"email": "872730491@qq.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"iidestiny/flysystem-oss": "^4.1",
+		"laravel/framework": "^9.0|^10.0"
+	},
+	"require-dev": {
+		"mockery/mockery": "^1.5",
+		"phpunit/phpunit": "^9.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Wwy\\FileSystem\\Uploader\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Wwy\\FileSystem\\Uploader\\": "tests"
+		}
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit",
+		"test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Wwy\\FileSystem\\Uploader\\UploaderServiceProvider"
+			]
+		}
+	}
+}
