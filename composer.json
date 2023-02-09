@@ -45,8 +45,8 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
-			]
+                "Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
+            ]
 		}
 	}
 }
