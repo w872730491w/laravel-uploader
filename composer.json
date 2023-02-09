@@ -1,8 +1,8 @@
 {
-	"name": "wwy/laravel-uploader",
+	"name": "lanyunit/laravel-uploader",
 	"description": "集成cos、oss、七牛云、本地上传的包",
 	"keywords": [
-		"wwy",
+		"lanyunit",
 		"laravel-uploader"
 	],
 	"homepage": "https://github.com/w872730491w/laravel-uploader",
@@ -27,12 +27,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Wwy\\FileSystem\\Uploader\\": "src"
+			"Lanyunit\\FileSystem\\Uploader\\": "src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Wwy\\FileSystem\\Uploader\\": "tests"
+			"Lanyunit\\FileSystem\\Uploader\\": "tests"
 		}
 	},
 	"scripts": {
@@ -45,7 +45,7 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Wwy\\FileSystem\\Uploader\\UploaderServiceProvider"
+				"Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
 			]
 		}
 	}

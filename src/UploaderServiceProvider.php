@@ -1,6 +1,6 @@
 <?php
 
-namespace Wwy\FileSystem\Uploader;
+namespace Lanyunit\FileSystem\Uploader;
 
 use League\Flysystem\Filesystem;
 use Illuminate\Support\ServiceProvider;

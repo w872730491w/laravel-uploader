@@ -1,6 +1,6 @@
 <?php
 
-namespace Wwy\FileSystem\Uploader;
+namespace Lanyunit\FileSystem\Uploader;
 
 class Uploader
 {

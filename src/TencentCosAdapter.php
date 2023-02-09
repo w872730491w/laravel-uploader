@@ -1,6 +1,6 @@
 <?php
 
-namespace Wwy\FileSystem\Uploader;
+namespace Lanyunit\FileSystem\Uploader;
 
 use QCloud\COSSTS\Sts;
 use Overtrue\Flysystem\Cos\CosAdapter;

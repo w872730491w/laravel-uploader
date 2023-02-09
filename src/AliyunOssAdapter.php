@@ -1,6 +1,6 @@
 <?php
 
-namespace Wwy\FileSystem\Uploader;
+namespace Lanyunit\FileSystem\Uploader;
 
 use League\Flysystem\PathPrefixer;
 use Iidestiny\Flysystem\Oss\OssAdapter;
