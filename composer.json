@@ -17,7 +17,9 @@
 	],
 	"require": {
 		"iidestiny/flysystem-oss": "^4.1",
-		"laravel/framework": "^9.0|^10.0"
+		"laravel/framework": "^9.0|^10.0",
+		"overtrue/flysystem-cos": "^5.1",
+		"qcloud_sts/qcloud-sts-sdk": "^3.0"
 	},
 	"require-dev": {
 		"mockery/mockery": "^1.5",
