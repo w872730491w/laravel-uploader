@@ -40,7 +40,7 @@ If you discover any security related issues, please email 872730491@qq.com inste
 
 ## Credits
 
--   [wwy](https://github.com/wwy)
+-   [wwy](https://github.com/w872730491w)
 -   [All Contributors](../../contributors)
 
 ## License
