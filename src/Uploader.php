@@ -16,6 +16,8 @@ class Uploader
         $config = $baseConfig[$type];
         $config['max_size'] = $baseConfig['max_size'];
         $config['expire_time'] = $baseConfig['expire_time'];
+        $config['callback_url'] = $baseConfig['callback_url'];
+        $config['prefix'] = $baseConfig['prefix'];
 
         if ($type === 'aliyun') {
             $root = $config['prefix'] ?? null;
@@ -62,7 +64,8 @@ class Uploader
                 $config['secret_key'],
                 $config['bucket'],
                 $config['domain'],
-                $config['expire_time']
+                $config['expire_time'],
+                $config['prefix']
             );
         }
 
