@@ -56,6 +56,16 @@ class Uploader
             $adapter = new TencentCosAdapter($config);
         }
 
+        if ($type === 'qiniu') {
+            $adapter = new QiniuAdapter(
+                $config['access_key'],
+                $config['secret_key'],
+                $config['bucket'],
+                $config['domain'],
+                $config['expire_time']
+            );
+        }
+
         return $adapter;
     }
 }
