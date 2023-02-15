@@ -14,7 +14,6 @@ class UploaderServiceProvider extends ServiceProvider
     public function boot()
     {
         app('filesystem')->extend('uploader', function ($app, $config) {
-            $config['driver'] = 'uploader';
             $adapter = Uploader::getAdapter($config);
             return new FilesystemAdapter(new Filesystem($adapter), $adapter, $config);
         });

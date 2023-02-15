@@ -19,6 +19,11 @@ class QiniuAdapter extends QiniuQiniuAdapter
 
     public function getTokenConfig(?string $key = null, ?array $policy = null, ?string $strictPolice = null)
     {
-        return $this->getUploadToken($key, $this->expire_time, $policy, $strictPolice);
+        $token = $this->getUploadToken($key, $this->expire_time, $policy, $strictPolice);
+        return [
+            'key' => $key,
+            'token' => $token,
+            'expire_time' => $this->expire_time
+        ];
     }
 }
