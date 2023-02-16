@@ -107,12 +107,12 @@ class AliyunOssAdapter extends OssAdapter
         ];
         $conditions[] = $condition;
 
-        $start = [
-            0 => 'starts-with',
-            1 => '$key',
-            2 => $prefix,
-        ];
-        $conditions[] = $start;
+        // $start = [
+        //     0 => 'starts-with',
+        //     1 => '$key',
+        //     2 => $prefix,
+        // ];
+        // $conditions[] = $start;
 
         $arr = [
             'expiration' => $expiration,
