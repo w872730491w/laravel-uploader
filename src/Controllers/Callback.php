@@ -21,7 +21,7 @@ class Callback extends Controller
                 return response()->json($data, 401);
             }
 
-            $data['url'] = $adapter->normalizeHost() . ltrim($adapter->getDir()) . '/' . $data['filename'];
+            $data['url'] = rtrim($adapter->normalizeHost()) . ltrim($adapter->getDir()) . '/' . $data['filename'];
             return response()->json($data);
         }
 
