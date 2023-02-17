@@ -131,7 +131,7 @@ class AliyunOssAdapter extends OssAdapter
         $response['expire'] = $end;
         $response['callback'] = $base64CallbackBody;
         $response['callback-var'] = $callbackVar;
-        $response['dir'] = $prefix;  // 这个参数是设置用户上传文件时指定的前缀。
+        $response['dir'] = ltrim($prefix, '/');  // 这个参数是设置用户上传文件时指定的前缀。
 
         return $response;
     }
