@@ -17,18 +17,8 @@ class Callback extends Controller
             $adapter = $storage->getAdapter();
             list($verify, $data) = $adapter->verify();
 
-            Log::build([
-                'path' => storage_path('logs/upload/info.log'),
-            ])->info('上传回调', [
-                'server' => $_SERVER,
-                'body' => file_get_contents('php://input')
-            ]);
-
             if (!$verify) {
-                Log::build([
-                    'driver' => 'single',
-                    'path' => storage_path('logs/upload/error.log'),
-                ])->error('上传回调失败', $data);
+                return response()->json($data, 401);
             }
 
             $data['url'] = $adapter->normalizeHost() + $adapter->getDir() + '/' + $data['filename'];
