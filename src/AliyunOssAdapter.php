@@ -82,8 +82,8 @@ class AliyunOssAdapter extends OssAdapter
         $data = [];
         if (!empty($customData)) {
             foreach ($customData as $key => $value) {
-                $callbackVar['x:'.$key] = $value;
-                $data[$key] = '${x:'.$key.'}';
+                $callbackVar['x:' . $key] = $value;
+                $data[$key] = '${x:' . $key . '}';
             }
         }
 
@@ -154,5 +154,57 @@ class AliyunOssAdapter extends OssAdapter
     {
         // fix bug https://connect.console.aliyun.com/connect/detail/162632
         return (new \DateTime('now', new \DateTimeZone('UTC')))->setTimestamp($time)->format('Y-m-d\TH:i:s\Z');
+    }
+
+    /**
+     * 验签.
+     */
+    public function verify(): array
+    {
+        // oss 前面header、公钥 header
+        $request = request();
+        $authorizationBase64 = $request->header('authorization', '');
+        $pubKeyUrlBase64 = $request->header('x-oss-pub-key-url', '');
+
+        // 验证失败
+        if ('' == $authorizationBase64 || '' == $pubKeyUrlBase64) {
+            return [false, ['CallbackFailed' => 'authorization or pubKeyUrl is null']];
+        }
+
+        // 获取OSS的签名
+        $authorization = base64_decode($authorizationBase64);
+        // 获取公钥
+        $pubKeyUrl = base64_decode($pubKeyUrlBase64);
+        // 请求验证
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $pubKeyUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        $pubKey = curl_exec($ch);
+
+        if ('' == $pubKey) {
+            return [false, ['CallbackFailed' => 'curl is fail']];
+        }
+
+        // 获取回调 body
+        $body = file_get_contents('php://input');
+        // 拼接待签名字符串
+        $path = $_SERVER['REQUEST_URI'];
+        $pos = strpos($path, '?');
+        if (false === $pos) {
+            $authStr = urldecode($path) . "\n" . $body;
+        } else {
+            $authStr = urldecode(substr($path, 0, $pos)) . substr($path, $pos, strlen($path) - $pos) . "\n" . $body;
+        }
+        // 验证签名
+        $ok = openssl_verify($authStr, $authorization, $pubKey, OPENSSL_ALGO_MD5);
+
+        if (1 !== $ok) {
+            return [false, ['CallbackFailed' => 'verify is fail, Illegal data']];
+        }
+
+        parse_str($body, $data);
+
+        return [true, $data];
     }
 }
