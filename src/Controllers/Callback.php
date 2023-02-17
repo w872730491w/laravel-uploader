@@ -16,7 +16,14 @@ class Callback extends Controller
         if ($config['type'] === 'aliyun') {
             $adapter = $storage->getAdapter();
             list($verify, $data) = $adapter->verify();
-            
+
+            Log::build([
+                'path' => storage_path('logs/upload/info.log'),
+            ])->info('上传回调', [
+                'server' => $_SERVER,
+                'body' => file_get_contents('php://input')
+            ]);
+
             if (!$verify) {
                 Log::build([
                     'driver' => 'single',
