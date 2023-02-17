@@ -187,7 +187,7 @@ class AliyunOssAdapter extends OssAdapter
         }
 
         // 获取回调 body
-        $body = file_get_contents('php://input');
+        $body = $request->getContent();
         // 拼接待签名字符串
         $path = $request->getRequestUri();
         $pos = strpos($path, '?');
