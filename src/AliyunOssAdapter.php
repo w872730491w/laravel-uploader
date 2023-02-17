@@ -110,7 +110,7 @@ class AliyunOssAdapter extends OssAdapter
         $start = [
             0 => 'starts-with',
             1 => '$key',
-            2 => $prefix,
+            2 => ltrim($prefix, '/'),
         ];
         $conditions[] = $start;
 
