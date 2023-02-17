@@ -31,6 +31,7 @@ class Callback extends Controller
                 ])->error('上传回调失败', $data);
             }
 
+            $data['url'] = $adapter->normalizeHost() + $adapter->getDir() + '/' + $data['filename'];
             return response()->json($data);
         }
 

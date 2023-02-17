@@ -62,7 +62,7 @@ class AliyunOssAdapter extends OssAdapter
      */
     public function signatureConfig(string $prefix = '', $callBackUrl = null, array $customData = [], int $expire = 30, int $contentLengthRangeValue = 1048576000, array $systemData = [])
     {
-        $prefix = $this->prefixer->prefixPath($prefix);
+        $prefix = $this->getDir();
 
         // 系统参数
         $system = [];
@@ -110,7 +110,7 @@ class AliyunOssAdapter extends OssAdapter
         $start = [
             0 => 'starts-with',
             1 => '$key',
-            2 => ltrim($prefix, '/'),
+            2 => $prefix,
         ];
         $conditions[] = $start;
 
@@ -131,14 +131,45 @@ class AliyunOssAdapter extends OssAdapter
         $response['expire'] = $end;
         $response['callback'] = $base64CallbackBody;
         $response['callback-var'] = $callbackVar;
-        $response['dir'] = ltrim($prefix, '/');  // 这个参数是设置用户上传文件时指定的前缀。
+        $response['dir'] = $prefix;  // 这个参数是设置用户上传文件时指定的前缀。
 
         return $response;
     }
 
-    public function getTokenConfig(string $path = '/', array $customData = [], array $systemData = [])
+    /**
+     * getDir
+     *
+     * @return string
+     */
+    public function getDir()
     {
-        return $this->signatureConfig($path, $this->callBackUrl, $customData, $this->expire, $this->contentLengthRangeValue, $systemData);
+        return ltrim($this->prefixer->prefixPath(''), '/');
+    }
+
+    /**
+     * normalize Host.
+     */
+    public function normalizeHost(): string
+    {
+        if ($this->isCName) {
+            $domain = $this->endpoint;
+        } else {
+            $domain = $this->bucket . '.' . $this->endpoint;
+        }
+
+        if ($this->useSSL) {
+            $domain = "https://{$domain}";
+        } else {
+            $domain = "http://{$domain}";
+        }
+
+        return rtrim($domain, '/') . '/';
+    }
+
+
+    public function getTokenConfig(array $customData = [], array $systemData = [])
+    {
+        return $this->signatureConfig('', $this->callBackUrl, $customData, $this->expire, $this->contentLengthRangeValue, $systemData);
     }
 
     /**
