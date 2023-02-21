@@ -27,7 +27,7 @@ class QiniuAdapter extends QiniuQiniuAdapter
             'returnBody' => '{ "key": $(key), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height) }',
             'fsizeLimit' => $this->max_size,
             'forceSaveKey' => true,
-            'saveKey' => '$(etag)'
+            'saveKey' => $this->prefix . '$(etag)'
         ];
 
         if (!is_null($policy)) {
