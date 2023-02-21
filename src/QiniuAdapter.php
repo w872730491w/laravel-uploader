@@ -23,7 +23,8 @@ class QiniuAdapter extends QiniuQiniuAdapter
         return [
             'key' => $key,
             'token' => $token,
-            'expire_time' => time() + $this->expire_time
+            'expire_time' => time() + $this->expire_time,
+            'domain' => $this->domain
         ];
     }
 }

@@ -14,6 +14,8 @@ class UploaderServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerPublishing();
+
         $this->registerRoutes();
 
         app('filesystem')->extend('uploader', function ($app, $config) {
@@ -35,5 +37,19 @@ class UploaderServiceProvider extends ServiceProvider
         ], function () {
             Route::post('callback', 'Callback@index');
         });
+    }
+
+    /**
+     * Register the package's publishable resources.
+     *
+     * @return void
+     */
+    private function registerPublishing()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/uploader.php' => config_path('uploader.php'),
+            ], 'uploader-config');
+        }
     }
 }

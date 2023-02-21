@@ -2,6 +2,8 @@
 
 namespace Lanyunit\FileSystem\Uploader;
 
+use Lanyunit\FileSystem\Uploader\Exception\UploaderException;
+
 class Uploader
 {
     /**
@@ -70,5 +72,20 @@ class Uploader
         }
 
         return $adapter;
+    }
+
+    /**
+     * 检查类型
+     *
+     * @return void
+     */
+    public static function checkAllowType()
+    {
+        $type = request()->post('type');
+        $allow = config('uploader.allow');
+
+        if (!isset($allow['type']) && !isset($allow[$type])) {
+            throw new UploaderException('允许上传的类型不存在');
+        }
     }
 }

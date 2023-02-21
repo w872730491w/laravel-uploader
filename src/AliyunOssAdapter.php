@@ -60,7 +60,7 @@ class AliyunOssAdapter extends OssAdapter
      *
      * @throws \Exception
      */
-    public function signatureConfig(string $prefix = '', $callBackUrl = null, array $customData = [], int $expire = 30, int $contentLengthRangeValue = 1048576000, array $systemData = [])
+    public function signatureConfig(string $path = '', $callBackUrl = null, array $customData = [], int $expire = 30, int $contentLengthRangeValue = 1048576000, array $systemData = [])
     {
         $prefix = $this->getDir();
 
