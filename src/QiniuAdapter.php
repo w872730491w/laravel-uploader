@@ -22,12 +22,14 @@ class QiniuAdapter extends QiniuQiniuAdapter
     public function getTokenConfig(?string $key = null, ?array $policy = null, ?string $strictPolice = null)
     {
         $basePolice = [
+            'scope' => $this->bucket . ':' . $this->prefix,
+            'isPrefixalScope' => 1,
             'callbackUrl' => $this->callback_url,
             'callbackBodyType' => 'application/json',
             'returnBody' => '{ "key": $(key), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height) }',
             'fsizeLimit' => $this->max_size,
             'forceSaveKey' => true,
-            'saveKey' => $this->prefix . '$(etag)'
+            'saveKey' => '$(etag)'
         ];
 
         if (!is_null($policy)) {
