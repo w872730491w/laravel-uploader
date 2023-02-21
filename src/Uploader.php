@@ -67,7 +67,9 @@ class Uploader
                 $config['bucket'],
                 $config['domain'],
                 $config['expire_time'],
-                $config['prefix']
+                $config['prefix'],
+                $config['callback_url'],
+                $config['max_size'] * 1024 * 1024,
             );
         }
 

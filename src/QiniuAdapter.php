@@ -13,13 +13,29 @@ class QiniuAdapter extends QiniuQiniuAdapter
         protected string $bucket,
         protected string $domain,
         protected $expire_time,
-        protected string $prefix
+        protected string $prefix,
+        protected string $callback_url,
+        protected string $max_size
     ) {
     }
 
     public function getTokenConfig(?string $key = null, ?array $policy = null, ?string $strictPolice = null)
     {
-        $token = $this->getUploadToken($key, $this->expire_time, $policy, $strictPolice);
+        $basePolice = [
+            'callbackUrl' => $this->callback_url,
+            'callbackBodyType' => 'application/json',
+            'returnBody' => '{ "key": $(key), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height) }',
+            'fsizeLimit' => $this->max_size,
+            'forceSaveKey' => true,
+            'saveKey' => '$(etag)'
+        ];
+
+        if (!is_null($policy)) {
+            $basePolice = array_merge($basePolice, $policy);
+        }
+
+        $token = $this->getUploadToken($key, $this->expire_time, $basePolice, $strictPolice);
+
         return [
             'key' => $key,
             'token' => $token,
