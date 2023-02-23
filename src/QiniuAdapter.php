@@ -15,34 +15,64 @@ class QiniuAdapter extends QiniuQiniuAdapter
         protected $expire_time,
         protected string $prefix,
         protected string $callback_url,
-        protected string $max_size
+        protected int $max_size
     ) {
     }
 
     public function getTokenConfig(?string $key = null, ?array $policy = null, ?string $strictPolice = null)
     {
-        $basePolice = [
-            'scope' => $this->bucket . ':' . $this->prefix,
-            'isPrefixalScope' => 1,
-            'callbackUrl' => $this->callback_url,
-            'callbackBodyType' => 'application/json',
-            'returnBody' => '{ "key": $(key), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height) }',
-            'fsizeLimit' => $this->max_size,
-            'forceSaveKey' => true,
-            'saveKey' => '$(etag)'
+        $allow = Uploader::getAllowType();
+
+        $body = [
+            'type' => $allow['type'],
+            'key' => '$(key)',
+            'hash' => '$(etag)',
+            'url' => rtrim($this->domain) . '/$(key)'
         ];
 
-        if (!is_null($policy)) {
-            $basePolice = array_merge($basePolice, $policy);
+        if ($allow['type'] === 'image') {
+            $body['w'] = '$(imageInfo.width)';
+            $body['h'] = '$(imageInfo.height)';
         }
 
-        $token = $this->getUploadToken($key, $this->expire_time, $basePolice, $strictPolice);
+        $basePolicy = [
+            'scope' => $this->bucket . ':' . $this->prefix,
+            'isPrefixalScope' => 1,
+            'callbackUrl' => $this->normalizeHost($this->callback_url),
+            'callbackBodyType' => 'application/json',
+            'callbackBody' => json_encode($body, JSON_UNESCAPED_UNICODE),
+            'fsizeLimit' => (int) $allow['max_size'],
+            'insertOnly' => 1,
+            'forceSaveKey' => true,
+            'saveKey' => ltrim($this->prefix) . '$(etag)'
+        ];
+
+        if ($allow['mimetypes'] && $allow['mimetypes'] !== '*') {
+            $basePolicy['mimeLimit'] = is_array($allow['mimetypes']) ? implode(';', $allow['mimetypes']) : $allow['mimetypes'];
+        }
+
+        if (!is_null($policy)) {
+            $basePolicy = array_merge($basePolicy, $policy);
+        }
+
+        $token = $this->getUploadToken($key, $this->expire_time, $basePolicy, $strictPolice);
 
         return [
-            'key' => $key,
+            'prefix' => $this->prefix,
             'token' => $token,
             'expire_time' => time() + $this->expire_time,
-            'domain' => $this->domain
+            'domain' => $this->domain,
+            'max_size' => $allow['max_size'],
+            'mime_types' => $allow['mimetypes']
         ];
+    }
+
+    public function normalizeHost($domain): string
+    {
+        if (0 !== stripos($domain, 'https://') && 0 !== stripos($domain, 'http://')) {
+            $domain = "http://{$domain}";
+        }
+
+        return rtrim($domain, '/') . '/';
     }
 }

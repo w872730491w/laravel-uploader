@@ -35,6 +35,7 @@ class UploaderServiceProvider extends ServiceProvider
             'namespace' => 'Lanyunit\FileSystem\Uploader\Controllers',
             'prefix' => 'api/upload',
         ], function () {
+            Route::post('put', 'Callback@create');
             Route::post('callback', 'Callback@index');
         });
     }

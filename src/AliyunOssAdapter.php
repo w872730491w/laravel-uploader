@@ -62,6 +62,8 @@ class AliyunOssAdapter extends OssAdapter
      */
     public function signatureConfig(string $path = '', $callBackUrl = null, array $customData = [], int $expire = 30, int $contentLengthRangeValue = 1048576000, array $systemData = [])
     {
+        $allow = Uploader::getAllowType();
+
         $prefix = $this->getDir();
 
         // 系统参数
@@ -79,7 +81,10 @@ class AliyunOssAdapter extends OssAdapter
 
         // 自定义参数
         $callbackVar = [];
-        $data = [];
+        $data = [
+            'mimeType' => '${mimeType}',
+            'allowMimeType' => $allow['mimetypes']
+        ];
         if (!empty($customData)) {
             foreach ($customData as $key => $value) {
                 $callbackVar['x:' . $key] = $value;
@@ -103,16 +108,31 @@ class AliyunOssAdapter extends OssAdapter
         $condition = [
             0 => 'content-length-range',
             1 => 0,
-            2 => $contentLengthRangeValue,
+            2 => $allow['max_size'],
         ];
         $conditions[] = $condition;
 
+        // 允许上传的前缀
         $start = [
             0 => 'starts-with',
             1 => '$key',
             2 => $prefix,
         ];
         $conditions[] = $start;
+
+        // 允许上传的文件类型 mimeType
+        $allowTypes = [];
+        foreach ($allow['mimetypes'] as $v) {
+            if (strpos('/*', $v) === false) {
+                $allowTypes[] = $v;
+            }
+        }
+        $contentType = [
+            0 => 'in',
+            1 => '$content-type',
+            2 => $allowTypes
+        ];
+        $conditions[] = $contentType;
 
         $arr = [
             'expiration' => $expiration,
@@ -128,9 +148,11 @@ class AliyunOssAdapter extends OssAdapter
         $response['host'] = $this->normalizeHost();
         $response['policy'] = $base64Policy;
         $response['signature'] = $signature;
-        $response['expire'] = $end;
+        $response['expire_time'] = $end;
         $response['callback'] = $base64CallbackBody;
         $response['callback-var'] = $callbackVar;
+        $response['mime_types'] = $allow['mimetypes'];
+        $response['max_size'] = $allow['max_size'];
         $response['dir'] = $prefix;  // 这个参数是设置用户上传文件时指定的前缀。
 
         return $response;

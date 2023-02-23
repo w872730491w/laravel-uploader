@@ -2,10 +2,7 @@
 
 namespace Lanyunit\FileSystem\Uploader\Exception;
 
-class UploaderException
+class UploaderException extends \Exception
 {
-    public function context()
-    {
-        
-    }
+
 }

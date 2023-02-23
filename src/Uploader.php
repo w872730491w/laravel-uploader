@@ -3,6 +3,8 @@
 namespace Lanyunit\FileSystem\Uploader;
 
 use Lanyunit\FileSystem\Uploader\Exception\UploaderException;
+use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use League\Flysystem\Visibility;
 
 class Uploader
 {
@@ -15,6 +17,11 @@ class Uploader
     public static function getAdapter(array $baseConfig)
     {
         $type = $baseConfig['type'];
+
+        if (!in_array($type, ['aliyun', 'tencent', 'local', 'qiniu'])) {
+            throw new UploaderException('不支持此类型');
+        }
+
         $config = $baseConfig[$type];
         $config['max_size'] = $baseConfig['max_size'];
         $config['expire_time'] = $baseConfig['expire_time'];
@@ -22,7 +29,7 @@ class Uploader
         $config['prefix'] = $baseConfig['prefix'];
 
         if ($type === 'aliyun') {
-            $root = $config['prefix'] ?? null;
+            $root = isset($config['prefix']) ? ltrim($config['prefix'], '/') : null;
 
             $adapter = new AliyunOssAdapter(
                 $config['access_key_id'],
@@ -55,6 +62,7 @@ class Uploader
                 'cdn' => $config['cdn'] ?? null,
                 'prefix' => $config['prefix'] ?? '/',
                 'expire_time' => $config['expire_time'],
+                'callback_url' => $config['callback_url'],
             ];
 
             $adapter = new TencentCosAdapter($config);
@@ -73,6 +81,32 @@ class Uploader
             );
         }
 
+        if ($type === 'local') {
+            $localConfig = config('filesystems.disks.public');
+
+            $visibility = PortableVisibilityConverter::fromArray(
+                $localConfig['permissions'] ?? [],
+                $localConfig['directory_visibility'] ?? $localConfig['visibility'] ?? Visibility::PRIVATE
+            );
+
+            $links = ($localConfig['links'] ?? null) === 'skip'
+                ? LocalAdapter::SKIP_LINKS
+                : LocalAdapter::DISALLOW_LINKS;
+
+            $adapter = new LocalAdapter(
+                $localConfig['root'],
+                $visibility,
+                $localConfig['lock'] ?? LOCK_EX,
+                $links,
+                null,
+                false,
+                $config['expire_time'],
+                $config['prefix'],
+                $config['callback_url'],
+                $config['max_size'],
+            );
+        }
+
         return $adapter;
     }
 
@@ -81,13 +115,24 @@ class Uploader
      *
      * @return void
      */
-    public static function checkAllowType()
+    public static function getAllowType(?string $type = null)
     {
-        $type = request()->post('type');
+        if (is_null($type)) {
+            $type = request()->post('type');
+        }
+
         $allow = config('uploader.allow');
 
-        if (!isset($allow['type']) && !isset($allow[$type])) {
+        if (!isset($allow[$type])) {
             throw new UploaderException('允许上传的类型不存在');
         }
+
+        $config = $allow[$type];
+
+        return [
+            'type' => $type,
+            'mimetypes' => $config['mime'],
+            'max_size' => (int) ($config['max_size'] * 1024 * 1024),
+        ];
     }
 }
