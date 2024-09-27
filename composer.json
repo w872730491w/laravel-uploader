@@ -17,7 +17,7 @@
 	],
 	"require": {
 		"iidestiny/flysystem-oss": "^4.1",
-		"laravel/framework": "^9.0|^10.0",
+		"laravel/framework": "^9.0|^10.0|^11.0",
 		"overtrue/flysystem-cos": "^5.1",
 		"overtrue/flysystem-qiniu": "^3.2",
 		"qcloud_sts/qcloud-sts-sdk": "^3.0"
@@ -46,8 +46,8 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-                "Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
-            ]
+				"Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
+			]
 		}
 	}
 }
