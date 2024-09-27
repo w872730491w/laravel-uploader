@@ -16,7 +16,7 @@ class UploaderServiceProvider extends ServiceProvider
     {
         $this->registerPublishing();
 
-        $this->registerRoutes();
+        // $this->registerRoutes();
 
         app('filesystem')->extend('uploader', function ($app, $config) {
             $adapter = Uploader::getAdapter($config);

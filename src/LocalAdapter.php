@@ -35,7 +35,6 @@ class LocalAdapter extends LocalFilesystemAdapter
         protected $expire_time,
         protected $prefix,
         protected string $callback_url,
-        protected int $max_size,
     ) {
         parent::__construct($location, $visibility, $writeFlags, $linkHandling);
         $this->prefixer = new PathPrefixer($location, DIRECTORY_SEPARATOR);
@@ -123,9 +122,14 @@ class LocalAdapter extends LocalFilesystemAdapter
         }
     }
 
-    public function getTokenConfig()
+    /**
+     * 获取上传配置
+     * @param string $type
+     * @return array
+     */
+    public function getTokenConfig($type = null)
     {
-        $allow = Uploader::getAllowType();
+        $allow = Uploader::getAllowType($type);
 
         $policy = [
             'allowPrefix' => $this->prefix,

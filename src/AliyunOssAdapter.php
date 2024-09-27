@@ -34,7 +34,7 @@ class AliyunOssAdapter extends OssAdapter
      *
      * @throws OssException
      */
-    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, int $contentLengthRangeValue = 1048576000, array $buckets = [], ...$params)
+    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, array $buckets = [], ...$params)
     {
         $this->accessKeyId = $accessKeyId;
         $this->accessKeySecret = $accessKeySecret;
@@ -45,24 +45,53 @@ class AliyunOssAdapter extends OssAdapter
         $this->buckets = $buckets;
         $this->callBackUrl = $callBackUrl;
         $this->expire = $expire;
-        $this->contentLengthRangeValue = $contentLengthRangeValue;
         $this->params = $params;
         $this->initClient();
         $this->checkEndpoint();
     }
 
     /**
-     * oss 直传配置.
+     * getDir
      *
-     * @param null $callBackUrl
-     *
-     * @return false|string
-     *
-     * @throws \Exception
+     * @return string
      */
-    public function signatureConfig(string $path = '', $callBackUrl = null, array $customData = [], int $expire = 30, int $contentLengthRangeValue = 1048576000, array $systemData = [])
+    public function getDir()
     {
-        $allow = Uploader::getAllowType();
+        return ltrim($this->prefixer->prefixPath(''), '/');
+    }
+
+    /**
+     * normalize Host.
+     */
+    public function normalizeHost(): string
+    {
+        if ($this->isCName) {
+            $domain = $this->endpoint;
+        } else {
+            $domain = $this->bucket . '.' . $this->endpoint;
+        }
+
+        if ($this->useSSL) {
+            $domain = "https://{$domain}";
+        } else {
+            $domain = "http://{$domain}";
+        }
+
+        return rtrim($domain, '/') . '/';
+    }
+
+
+    /**
+     * OSS直传配置
+     * @param string|null $type
+     * @param array $customData
+     * @param array $systemData
+     * @throws \InvalidArgumentException
+     * @return array
+     */
+    public function getTokenConfig($type = null, array $customData = [], array $systemData = [])
+    {
+        $allow = Uploader::getAllowType($type);
 
         $prefix = $this->getDir();
 
@@ -93,7 +122,7 @@ class AliyunOssAdapter extends OssAdapter
         }
 
         $callbackParam = [
-            'callbackUrl' => $callBackUrl,
+            'callbackUrl' => $this->callBackUrl,
             'callbackBody' => urldecode(http_build_query(array_merge($system, $data))),
             'callbackBodyType' => 'application/x-www-form-urlencoded',
         ];
@@ -101,7 +130,7 @@ class AliyunOssAdapter extends OssAdapter
         $base64CallbackBody = base64_encode($callbackString);
 
         $now = time();
-        $end = $now + $expire;
+        $end = $now + $this->expire;
         $expiration = $this->gmt_iso8601($end);
 
         // 最大文件大小.用户可以自己设置
@@ -156,42 +185,6 @@ class AliyunOssAdapter extends OssAdapter
         $response['dir'] = $prefix;  // 这个参数是设置用户上传文件时指定的前缀。
 
         return $response;
-    }
-
-    /**
-     * getDir
-     *
-     * @return string
-     */
-    public function getDir()
-    {
-        return ltrim($this->prefixer->prefixPath(''), '/');
-    }
-
-    /**
-     * normalize Host.
-     */
-    public function normalizeHost(): string
-    {
-        if ($this->isCName) {
-            $domain = $this->endpoint;
-        } else {
-            $domain = $this->bucket . '.' . $this->endpoint;
-        }
-
-        if ($this->useSSL) {
-            $domain = "https://{$domain}";
-        } else {
-            $domain = "http://{$domain}";
-        }
-
-        return rtrim($domain, '/') . '/';
-    }
-
-
-    public function getTokenConfig(array $customData = [], array $systemData = [])
-    {
-        return $this->signatureConfig('', $this->callBackUrl, $customData, $this->expire, $this->contentLengthRangeValue, $systemData);
     }
 
     /**

@@ -8,9 +8,9 @@ use League\Flysystem\PathPrefixer;
 
 class TencentCosAdapter extends CosAdapter
 {
-    public function getTokenConfig(string $path = '/', array $customData = [])
+    public function getTokenConfig($type = null, string $path = '/', array $customData = [])
     {
-        $allow = Uploader::getAllowType();
+        $allow = Uploader::getAllowType($type);
 
         $path = (new PathPrefixer($this->config['prefix'], DIRECTORY_SEPARATOR))->prefixPath($path);
 
@@ -45,7 +45,7 @@ class TencentCosAdapter extends CosAdapter
             'bucket' => $config['bucket'], // 换成你的 bucket
             'region' => $config['region'], // 换成 bucket 所在园区
             'path' => $path,
-            'tempKeys'  => $tempKeys,
+            'tempKeys' => $tempKeys,
             'mime_types' => $allow['mimetypes'],
             'max_size' => $allow['max_size'],
             'expire_time' => $tempKeys['expiredTime'],

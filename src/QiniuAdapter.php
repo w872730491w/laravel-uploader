@@ -15,13 +15,12 @@ class QiniuAdapter extends QiniuQiniuAdapter
         protected $expire_time,
         protected string $prefix,
         protected string $callback_url,
-        protected int $max_size
     ) {
     }
 
-    public function getTokenConfig(?string $key = null, ?array $policy = null, ?string $strictPolice = null)
+    public function getTokenConfig($type = null, ?string $key = null, ?array $policy = null, ?string $strictPolice = null)
     {
-        $allow = Uploader::getAllowType();
+        $allow = Uploader::getAllowType($type);
 
         $body = [
             'type' => $allow['type'],

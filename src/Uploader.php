@@ -23,7 +23,6 @@ class Uploader
         }
 
         $config = $baseConfig[$type];
-        $config['max_size'] = $baseConfig['max_size'];
         $config['expire_time'] = $baseConfig['expire_time'];
         $config['callback_url'] = $baseConfig['callback_url'];
         $config['prefix'] = $baseConfig['prefix'];
@@ -40,7 +39,6 @@ class Uploader
                 $root,
                 $config['callback_url'],
                 $config['expire_time'],
-                $config['max_size'] * 1024 * 1024,
                 []
             );
         }
@@ -77,7 +75,6 @@ class Uploader
                 $config['expire_time'],
                 $config['prefix'],
                 $config['callback_url'],
-                $config['max_size'] * 1024 * 1024,
             );
         }
 
@@ -103,7 +100,6 @@ class Uploader
                 $config['expire_time'],
                 $config['prefix'],
                 $config['callback_url'],
-                $config['max_size'],
             );
         }
 
@@ -112,8 +108,9 @@ class Uploader
 
     /**
      * 检查类型
-     *
-     * @return void
+     * @param string $type
+     * @throws \Lanyunit\FileSystem\Uploader\Exception\UploaderException
+     * @return array
      */
     public static function getAllowType(?string $type = null)
     {
