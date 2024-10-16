@@ -23,9 +23,10 @@
     "qcloud_sts/qcloud-sts-sdk": "^3.0"
   },
   "require-dev": {
+    "laravel/framework": "^11.0",
     "mockery/mockery": "^1.5",
     "orchestra/testbench": "^9.5",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^10.5"
   },
   "autoload": {
     "psr-4": {
