@@ -1,53 +1,74 @@
 {
-	"name": "lanyunit/laravel-uploader",
-	"description": "集成cos、oss、七牛云、本地上传的包",
-	"keywords": [
-		"lanyunit",
-		"laravel-uploader"
-	],
-	"homepage": "https://github.com/w872730491w/laravel-uploader",
-	"license": "MIT",
-	"type": "library",
-	"authors": [
-		{
-			"name": "wwy",
-			"email": "872730491@qq.com",
-			"role": "Developer"
-		}
-	],
-	"require": {
-		"iidestiny/flysystem-oss": "^4.1",
-		"laravel/framework": "^9.0|^10.0|^11.0",
-		"overtrue/flysystem-cos": "^5.1",
-		"overtrue/flysystem-qiniu": "^3.2",
-		"qcloud_sts/qcloud-sts-sdk": "^3.0"
-	},
-	"require-dev": {
-		"mockery/mockery": "^1.5",
-		"phpunit/phpunit": "^9.5"
-	},
-	"autoload": {
-		"psr-4": {
-			"Lanyunit\\FileSystem\\Uploader\\": "src"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Lanyunit\\FileSystem\\Uploader\\": "tests"
-		}
-	},
-	"scripts": {
-		"test": "vendor/bin/phpunit",
-		"test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-	},
-	"config": {
-		"sort-packages": true
-	},
-	"extra": {
-		"laravel": {
-			"providers": [
-				"Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
-			]
-		}
-	}
+  "name": "lanyunit/laravel-uploader",
+  "description": "集成cos、oss、七牛云、本地上传的包",
+  "keywords": [
+    "lanyunit",
+    "laravel-uploader"
+  ],
+  "homepage": "https://github.com/w872730491w/laravel-uploader",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "wwy",
+      "email": "872730491@qq.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "iidestiny/flysystem-oss": "^4.1",
+    "illuminate/support": "^9.0|^10.0|^11.0",
+    "overtrue/flysystem-cos": "^5.1",
+    "overtrue/flysystem-qiniu": "^3.2",
+    "qcloud_sts/qcloud-sts-sdk": "^3.0"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.5",
+    "orchestra/testbench": "^9.5",
+    "phpunit/phpunit": "^10.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lanyunit\\FileSystem\\Uploader\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Lanyunit\\FileSystem\\Uploader\\": "tests",
+      "Workbench\\App\\": "workbench/app/",
+      "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+      "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+    "post-autoload-dump": [
+      "@clear",
+      "@prepare"
+    ],
+    "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+    "prepare": "@php vendor/bin/testbench package:discover --ansi",
+    "build": "@php vendor/bin/testbench workbench:build --ansi",
+    "serve": [
+      "Composer\\Config::disableProcessTimeout",
+      "@build",
+      "@php vendor/bin/testbench serve --ansi"
+    ],
+    "lint": [
+      "@php vendor/bin/phpstan analyse --verbose --ansi"
+    ]
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Lanyunit\\FileSystem\\Uploader\\UploaderServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }

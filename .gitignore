@@ -11,3 +11,4 @@ composer.lock
 /config.php
 .phpunit.result.cache
 cghooks.lock
+.env
