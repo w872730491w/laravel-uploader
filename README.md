@@ -1,8 +1,8 @@
 # Very short description of the package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/wwy/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/wwy/laravel-uploader)
-[![Total Downloads](https://img.shields.io/packagist/dt/wwy/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/wwy/laravel-uploader)
-![GitHub Actions](https://github.com/wwy/laravel-uploader/actions/workflows/main.yml/badge.svg)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/lanyunit/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/lanyunit/laravel-uploader)
+[![Total Downloads](https://img.shields.io/packagist/dt/lanyunit/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/lanyunit/laravel-uploader)
+![GitHub Actions](https://github.com/w872730491w/laravel-uploader/actions/workflows/main.yml/badge.svg)
 
 This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
 
