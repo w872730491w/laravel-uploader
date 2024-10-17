@@ -19,8 +19,6 @@ class LocalAdapter extends LocalFilesystemAdapter
 
     private VisibilityConverter $visibility;
 
-    private MimeTypeDetector $mimeTypeDetector;
-
     private string $rootLocation;
 
     /**
@@ -32,21 +30,20 @@ class LocalAdapter extends LocalFilesystemAdapter
         string $location,
         ?VisibilityConverter $visibility,
         private int $writeFlags,
-        private int $linkHandling,
+        int $linkHandling,
         ?MimeTypeDetector $mimeTypeDetector,
         bool $lazyRootCreation,
         protected $expire_time,
         protected $prefix,
         protected string $callback_url,
     ) {
-        parent::__construct($location, $visibility, $writeFlags, $linkHandling);
+        parent::__construct($location, $visibility, $writeFlags, $linkHandling, $mimeTypeDetector ?: new FallbackMimeTypeDetector(new FinfoMimeTypeDetector));
         $this->prefixer = new PathPrefixer($location, DIRECTORY_SEPARATOR);
         $visibility ??= new PortableVisibilityConverter;
         $this->visibility = $visibility;
         $this->rootLocation = $location;
-        $this->mimeTypeDetector = $mimeTypeDetector ?: new FallbackMimeTypeDetector(new FinfoMimeTypeDetector);
 
-        if (! $lazyRootCreation) {
+        if (!$lazyRootCreation) {
             $this->ensureRootDirectoryExists();
         }
     }
@@ -86,7 +83,7 @@ class LocalAdapter extends LocalFilesystemAdapter
         string $path,
         int $mode = \RecursiveIteratorIterator::SELF_FIRST
     ): \Generator {
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             return;
         }
 
@@ -119,7 +116,7 @@ class LocalAdapter extends LocalFilesystemAdapter
     private function setPermissions(string $location, int $visibility): void
     {
         error_clear_last();
-        if (! @chmod($location, $visibility)) {
+        if (!@chmod($location, $visibility)) {
             $extraMessage = error_get_last()['message'] ?? '';
             throw UnableToSetVisibility::atLocation($this->prefixer->stripPrefix($location), $extraMessage);
         }

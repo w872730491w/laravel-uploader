@@ -21,10 +21,13 @@ class Callback extends Controller
         $config = $storage->getConfig();
 
         if ($config['type'] === 'aliyun') {
+            /**
+             * @var \Lanyunit\FileSystem\Uploader\AliyunOssAdapter
+             */
             $adapter = $storage->getAdapter();
             [$verify, $data] = $adapter->verify();
 
-            if (! $verify) {
+            if (!$verify) {
                 return response()->json($data, 401);
             }
 
@@ -41,16 +44,19 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => $adapter->normalizeHost().$data['filename'],
+                'url' => $adapter->normalizeHost() . $data['filename'],
             ]);
         }
 
         if ($config['type'] === 'qiniu') {
+            /**
+             * @var \Lanyunit\FileSystem\Uploader\QiniuAdapter
+             */
             $adapter = $storage->getAdapter();
 
             $verify = $adapter->verifyCallback(request()->header('content-type'), request()->header('authorization'), $adapter->normalizeHost($config['callback_url']), request()->getContent());
 
-            if (! $verify) {
+            if (!$verify) {
                 return response()->json(['msg' => 'Unauthorization'], 401);
             }
 
@@ -66,7 +72,7 @@ class Callback extends Controller
 
             $policy = decrypt($post['auth']);
 
-            if (! is_array($policy) && $post['sessionToken'] != $policy['token']) {
+            if (!is_array($policy) && $post['sessionToken'] != $policy['token']) {
                 return response()->json(['msg' => 'Unauthorization'], 401);
             }
 
@@ -83,7 +89,7 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => '//'.$post['localtion'],
+                'url' => '//' . $post['localtion'],
             ]);
         }
 
@@ -110,7 +116,7 @@ class Callback extends Controller
 
             $policy = decrypt($data['auth']);
 
-            if (! is_array($policy) || ! isset($policy['allowPrefix']) || ! isset($policy['maxSize']) || ! isset($policy['callbackUrl']) || ! isset($policy['expireTime']) || ! isset($policy['mimeTypes'])) {
+            if (!is_array($policy) || !isset($policy['allowPrefix']) || !isset($policy['maxSize']) || !isset($policy['callbackUrl']) || !isset($policy['expireTime']) || !isset($policy['mimeTypes'])) {
                 return response()->json(null, 401);
             }
 
