@@ -1,8 +1,8 @@
 # Laravel Uploader
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/lanyunit/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/lanyunit/laravel-uploader)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/lanyunit/laravel-uploader/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/lanyunit/laravel-uploader/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/lanyunit/laravel-uploader/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/lanyunit/laravel-uploader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/w872730491w/laravel-uploader/run-tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/w872730491w/laravel-uploader/actions/workflows/run-tests.yml?query=branch%3Amaster)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/w872730491w/laravel-uploader/fix-php-code-style-issues.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/w872730491w/laravel-uploader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/lanyunit/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/lanyunit/laravel-uploader)
 
 Integrate `local`, `Tencent Cloud COS`, `Alibaba Cloud OSS`, and `Qiniu Cloud` uploads
@@ -130,8 +130,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [wwy](https://github.com/w872730491w)
-- [All Contributors](../../contributors)
+-   [wwy](https://github.com/w872730491w)
+-   [All Contributors](../../contributors)
 
 ## License
 
