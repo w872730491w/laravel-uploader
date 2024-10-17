@@ -43,7 +43,7 @@ class LocalAdapter extends LocalFilesystemAdapter
         $this->visibility = $visibility;
         $this->rootLocation = $location;
 
-        if (!$lazyRootCreation) {
+        if (! $lazyRootCreation) {
             $this->ensureRootDirectoryExists();
         }
     }
@@ -83,7 +83,7 @@ class LocalAdapter extends LocalFilesystemAdapter
         string $path,
         int $mode = \RecursiveIteratorIterator::SELF_FIRST
     ): \Generator {
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -116,7 +116,7 @@ class LocalAdapter extends LocalFilesystemAdapter
     private function setPermissions(string $location, int $visibility): void
     {
         error_clear_last();
-        if (!@chmod($location, $visibility)) {
+        if (! @chmod($location, $visibility)) {
             $extraMessage = error_get_last()['message'] ?? '';
             throw UnableToSetVisibility::atLocation($this->prefixer->stripPrefix($location), $extraMessage);
         }

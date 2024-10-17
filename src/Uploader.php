@@ -10,15 +10,16 @@ class Uploader
 {
     /**
      * 获取上传类
-     * @param array $baseConfig
-     * @throws \Lanyunit\FileSystem\Uploader\Exception\UploaderException
+     *
      * @return AliyunOssAdapter|LocalAdapter|QiniuAdapter|TencentCosAdapter
+     *
+     * @throws \Lanyunit\FileSystem\Uploader\Exception\UploaderException
      */
     public static function getAdapter(array $baseConfig)
     {
         $type = $baseConfig['type'];
 
-        if (!in_array($type, ['aliyun', 'tencent', 'local', 'qiniu'])) {
+        if (! in_array($type, ['aliyun', 'tencent', 'local', 'qiniu'])) {
             throw new UploaderException('不支持此类型');
         }
 
@@ -103,7 +104,7 @@ class Uploader
             );
         }
 
-        if (!isset($adapter)) {
+        if (! isset($adapter)) {
             throw new UploaderException('不支持该类型上传');
         }
 
@@ -112,9 +113,11 @@ class Uploader
 
     /**
      * 检查类型
-     * @param mixed $type
-     * @throws \Lanyunit\FileSystem\Uploader\Exception\UploaderException
+     *
+     * @param  mixed  $type
      * @return array
+     *
+     * @throws \Lanyunit\FileSystem\Uploader\Exception\UploaderException
      */
     public static function getAllowType(?string $type = null)
     {
@@ -124,7 +127,7 @@ class Uploader
 
         $allow = config('uploader.allow');
 
-        if (!isset($allow[$type])) {
+        if (! isset($allow[$type])) {
             throw new UploaderException('允许上传的类型不存在');
         }
 
