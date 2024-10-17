@@ -57,6 +57,8 @@ jobs:
       - name: Create env file
         run: |
           touch .env
+          echo APP_NAME=Laravel >> .env
+          echo APP_ENV=local >> .env
           echo APP_DEBUG=true >> .env
           echo APP_KEY="${{ secrets.APP_KEY }}" >> .env
           echo QINIU_ACCESS_KEY="${{ secrets.QINIU_ACCESS_KEY }}" >> .env
@@ -65,6 +67,7 @@ jobs:
           echo ALIYUN_ACCESS_KEY_SECRET="${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" >> .env
           echo TENCENT_SECRET_ID="${{ secrets.TENCENT_SECRET_ID }}" >> .env
           echo TENCENT_SECRET_KEY="${{ secrets.TENCENT_SECRET_KEY }}" >> .env
+          echo APP_KEY="${{ secrets.APP_KEY }}"
 
       - name: Execute tests
         run: vendor/bin/pest --ci
