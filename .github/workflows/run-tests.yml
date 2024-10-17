@@ -19,7 +19,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         php: [8.3, 8.2]
         laravel: [11.*, 10.*]
-        stability: [prefer-lowest, prefer-stable]
+        stability: [prefer-stable]
         include:
           - laravel: 11.*
             testbench: 9.*
@@ -56,17 +56,17 @@ jobs:
 
       - name: Create env file
         run: |
-          touch .env.testing
-          echo APP_NAME=Laravel >> .env.testing
-          echo APP_ENV=local >> .env.testing
-          echo APP_DEBUG=true >> .env.testing
-          echo APP_KEY="${{ secrets.APP_KEY }}" >> .env.testing
-          echo QINIU_ACCESS_KEY="${{ secrets.QINIU_ACCESS_KEY }}" >> .env.testing
-          echo QINIU_SECRET_KEY="${{ secrets.QINIU_SECRET_KEY }}" >> .env.testing
-          echo ALIYUN_ACCESS_KEY_ID="${{ secrets.ALIYUN_ACCESS_KEY_ID }}" >> .env.testing
-          echo ALIYUN_ACCESS_KEY_SECRET="${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" >> .env.testing
-          echo TENCENT_SECRET_ID="${{ secrets.TENCENT_SECRET_ID }}" >> .env.testing
-          echo TENCENT_SECRET_KEY="${{ secrets.TENCENT_SECRET_KEY }}" >> .env.testing
+          touch .env
+          echo APP_NAME=Laravel >> .env
+          echo APP_ENV=testing >> .env
+          echo APP_DEBUG=true >> .env
+          echo APP_KEY="${{ secrets.APP_KEY }}" >> .env
+          echo QINIU_ACCESS_KEY="${{ secrets.QINIU_ACCESS_KEY }}" >> .env
+          echo QINIU_SECRET_KEY="${{ secrets.QINIU_SECRET_KEY }}" >> .env
+          echo ALIYUN_ACCESS_KEY_ID="${{ secrets.ALIYUN_ACCESS_KEY_ID }}" >> .env
+          echo ALIYUN_ACCESS_KEY_SECRET="${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" >> .env
+          echo TENCENT_SECRET_ID="${{ secrets.TENCENT_SECRET_ID }}" >> .env
+          echo TENCENT_SECRET_KEY="${{ secrets.TENCENT_SECRET_KEY }}" >> .env
 
       - name: Execute tests
         run: composer test
