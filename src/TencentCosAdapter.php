@@ -4,7 +4,6 @@ namespace Lanyunit\FileSystem\Uploader;
 
 use League\Flysystem\PathPrefixer;
 use Overtrue\Flysystem\Cos\CosAdapter;
-use QCloud\COSSTS\Sts;
 
 class TencentCosAdapter extends CosAdapter
 {
@@ -23,7 +22,7 @@ class TencentCosAdapter extends CosAdapter
             'bucket' => $this->config['bucket'], // 换成你的 bucket
             'region' => $this->config['region'], // 换成 bucket 所在园区
             'durationSeconds' => $this->config['expire_time'], // 密钥有效期
-            'allowPrefix' => [$path.'/*'], // 这里改成允许的路径前缀，可以根据自己网站的用户登录态判断允许上传的具体路径，例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
+            'allowPrefix' => ["$path/*"], // 这里改成允许的路径前缀，可以根据自己网站的用户登录态判断允许上传的具体路径，例子： a.jpg 或者 a/* 或者 * (使用通配符*存在重大安全风险, 请谨慎评估使用)
             // 密钥的权限列表。简单上传和分片需要以下的权限，其他权限列表请看 https://cloud.tencent.com/document/product/436/31923
             'allowActions' => [
                 // 简单上传
@@ -38,7 +37,7 @@ class TencentCosAdapter extends CosAdapter
             ],
         ], $customData);
 
-        $tempKeys = (new Sts)->getTempKeys($config);
+        $tempKeys = (new \QCloud\COSSTS\Sts)->getTempKeys($config);
 
         $res = [
             'callback_url' => $this->config['callback_url'],

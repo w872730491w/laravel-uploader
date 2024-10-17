@@ -67,7 +67,6 @@ jobs:
           echo ALIYUN_ACCESS_KEY_SECRET="${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" >> .env
           echo TENCENT_SECRET_ID="${{ secrets.TENCENT_SECRET_ID }}" >> .env
           echo TENCENT_SECRET_KEY="${{ secrets.TENCENT_SECRET_KEY }}" >> .env
-          echo APP_KEY="${{ secrets.APP_KEY }}"
 
       - name: Execute tests
         run: vendor/bin/pest --ci
