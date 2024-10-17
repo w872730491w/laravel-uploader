@@ -69,4 +69,4 @@ jobs:
           echo TENCENT_SECRET_KEY="${{ secrets.TENCENT_SECRET_KEY }}" >> .env
 
       - name: Execute tests
-        run: vendor/bin/pest --ci
+        run: composer test
