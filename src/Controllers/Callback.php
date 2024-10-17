@@ -11,6 +11,7 @@ class Callback extends Controller
 {
     /**
      * 回调
+     *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function index()
@@ -23,7 +24,7 @@ class Callback extends Controller
             $adapter = $storage->getAdapter();
             [$verify, $data] = $adapter->verify();
 
-            if (!$verify) {
+            if (! $verify) {
                 return response()->json($data, 401);
             }
 
@@ -33,13 +34,14 @@ class Callback extends Controller
                 } catch (\Throwable $th) {
                     //throw $th;
                 }
+
                 return response()->json([
-                    'msg' => '文件类型不符'
+                    'msg' => '文件类型不符',
                 ], 403);
             }
 
             return response()->json([
-                'url' => $adapter->normalizeHost() . $data['filename']
+                'url' => $adapter->normalizeHost().$data['filename'],
             ]);
         }
 
@@ -48,14 +50,14 @@ class Callback extends Controller
 
             $verify = $adapter->verifyCallback(request()->header('content-type'), request()->header('authorization'), $adapter->normalizeHost($config['callback_url']), request()->getContent());
 
-            if (!$verify) {
+            if (! $verify) {
                 return response()->json(['msg' => 'Unauthorization'], 401);
             }
 
             $data = request()->post();
 
             return response()->json([
-                'url' => $data['url']
+                'url' => $data['url'],
             ]);
         }
 
@@ -64,24 +66,24 @@ class Callback extends Controller
 
             $policy = decrypt($post['auth']);
 
-            if (!is_array($policy) && $post['sessionToken'] != $policy['token']) {
+            if (! is_array($policy) && $post['sessionToken'] != $policy['token']) {
                 return response()->json(['msg' => 'Unauthorization'], 401);
             }
 
             if ($post['size'] > $policy['maxSize']) {
                 return response()->json([
-                    'msg' => '文件超出最大上传大小限制'
+                    'msg' => '文件超出最大上传大小限制',
                 ], 413);
             }
 
             if ($this->checkMimeType($post['mimetype'], $policy['mimeTypes']) === false) {
                 return response()->json([
-                    'msg' => '文件类型不符'
+                    'msg' => '文件类型不符',
                 ], 403);
             }
 
             return response()->json([
-                'url' => '//' . $post['localtion']
+                'url' => '//'.$post['localtion'],
             ]);
         }
 
@@ -90,7 +92,7 @@ class Callback extends Controller
 
     /**
      * 上传
-     * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function create(Request $request)
@@ -108,7 +110,7 @@ class Callback extends Controller
 
             $policy = decrypt($data['auth']);
 
-            if (!is_array($policy) || !isset($policy['allowPrefix']) || !isset($policy['maxSize']) || !isset($policy['callbackUrl']) || !isset($policy['expireTime']) || !isset($policy['mimeTypes'])) {
+            if (! is_array($policy) || ! isset($policy['allowPrefix']) || ! isset($policy['maxSize']) || ! isset($policy['callbackUrl']) || ! isset($policy['expireTime']) || ! isset($policy['mimeTypes'])) {
                 return response()->json(null, 401);
             }
 
@@ -118,7 +120,7 @@ class Callback extends Controller
 
             if (strpos($policy['allowPrefix'], $data['key']) != 0) {
                 return response()->json([
-                    'msg' => 'prefix not allow'
+                    'msg' => 'prefix not allow',
                 ], 422);
             }
 
@@ -131,13 +133,13 @@ class Callback extends Controller
 
             if ($fileSize > $policy['maxSize'] || $fileSize > $file->getMaxFilesize()) {
                 return response()->json([
-                    'msg' => '文件超出最大上传大小限制'
+                    'msg' => '文件超出最大上传大小限制',
                 ], 413);
             }
 
             if ($this->checkMimeType($mimeType, $policy['mimeTypes']) === false) {
                 return response()->json([
-                    'msg' => '文件类型不符'
+                    'msg' => '文件类型不符',
                 ], 403);
             }
 
@@ -153,7 +155,7 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => Storage::disk('public')->url($key)
+                'url' => Storage::disk('public')->url($key),
             ]);
         }
 
@@ -162,9 +164,6 @@ class Callback extends Controller
 
     /**
      * 检查mimetype
-     * @param string $file_mime
-     * @param array|string $allow_mime
-     * @return bool
      */
     public function checkMimeType(string $file_mime, array|string $allow_mime): bool
     {
@@ -180,6 +179,7 @@ class Callback extends Controller
                     break;
                 }
             }
+
             return $res;
         }
 
@@ -188,9 +188,6 @@ class Callback extends Controller
 
     /**
      * 检查mimetype
-     * @param string $file_mime
-     * @param string $allow_mime
-     * @return bool
      */
     public function checkMimeTypeByString(string $file_mime, string $allow_mime): bool
     {
@@ -200,6 +197,7 @@ class Callback extends Controller
         if ($allow_mime === $file_mime) {
             return true;
         }
+
         return false;
     }
 }

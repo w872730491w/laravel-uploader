@@ -2,36 +2,18 @@
 
 namespace Lanyunit\FileSystem\Uploader;
 
-use League\Flysystem\PathPrefixer;
 use Iidestiny\Flysystem\Oss\OssAdapter;
+use League\Flysystem\PathPrefixer;
 
 class AliyunOssAdapter extends OssAdapter
 {
-    /**
-     * @var
-     */
     protected $callBackUrl;
 
-    /**
-     * @var
-     */
     protected $expire;
 
-    /**
-     * @var
-     */
     protected $contentLengthRangeValue;
 
     /**
-     * @param $accessKeyId
-     * @param $accessKeySecret
-     * @param $endpoint
-     * @param $bucket
-     * @param $isCName
-     * @param $prefix
-     * @param $callBackUrl
-     * @param ...$params
-     *
      * @throws OssException
      */
     public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, array $buckets = [], ...$params)
@@ -68,7 +50,7 @@ class AliyunOssAdapter extends OssAdapter
         if ($this->isCName) {
             $domain = $this->endpoint;
         } else {
-            $domain = $this->bucket . '.' . $this->endpoint;
+            $domain = $this->bucket.'.'.$this->endpoint;
         }
 
         if ($this->useSSL) {
@@ -77,17 +59,16 @@ class AliyunOssAdapter extends OssAdapter
             $domain = "http://{$domain}";
         }
 
-        return rtrim($domain, '/') . '/';
+        return rtrim($domain, '/').'/';
     }
-
 
     /**
      * OSS直传配置
-     * @param string|null $type
-     * @param array $customData
-     * @param array $systemData
-     * @throws \InvalidArgumentException
+     *
+     * @param  string|null  $type
      * @return array
+     *
+     * @throws \InvalidArgumentException
      */
     public function getTokenConfig($type = null, array $customData = [], array $systemData = [])
     {
@@ -101,7 +82,7 @@ class AliyunOssAdapter extends OssAdapter
             $system = self::SYSTEM_FIELD;
         } else {
             foreach ($systemData as $key => $value) {
-                if (!in_array($value, self::SYSTEM_FIELD)) {
+                if (! in_array($value, self::SYSTEM_FIELD)) {
                     throw new \InvalidArgumentException("Invalid oss system filed: $value");
                 }
                 $system[$key] = $value;
@@ -112,12 +93,12 @@ class AliyunOssAdapter extends OssAdapter
         $callbackVar = [];
         $data = [
             'mimeType' => '${mimeType}',
-            'allowMimeType' => $allow['mimetypes']
+            'allowMimeType' => $allow['mimetypes'],
         ];
-        if (!empty($customData)) {
+        if (! empty($customData)) {
             foreach ($customData as $key => $value) {
-                $callbackVar['x:' . $key] = $value;
-                $data[$key] = '${x:' . $key . '}';
+                $callbackVar['x:'.$key] = $value;
+                $data[$key] = '${x:'.$key.'}';
             }
         }
 
@@ -159,7 +140,7 @@ class AliyunOssAdapter extends OssAdapter
         $contentType = [
             0 => 'in',
             1 => '$content-type',
-            2 => $allowTypes
+            2 => $allowTypes,
         ];
         $conditions[] = $contentType;
 
@@ -190,7 +171,6 @@ class AliyunOssAdapter extends OssAdapter
     /**
      * gmt.
      *
-     * @param $time
      *
      * @return string
      *
@@ -213,7 +193,7 @@ class AliyunOssAdapter extends OssAdapter
         $pubKeyUrlBase64 = $request->header('x-oss-pub-key-url', '');
 
         // 验证失败
-        if ('' == $authorizationBase64 || '' == $pubKeyUrlBase64) {
+        if ($authorizationBase64 == '' || $pubKeyUrlBase64 == '') {
             return [false, ['CallbackFailed' => 'authorization or pubKeyUrl is null']];
         }
 
@@ -228,7 +208,7 @@ class AliyunOssAdapter extends OssAdapter
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         $pubKey = curl_exec($ch);
 
-        if ('' == $pubKey) {
+        if ($pubKey == '') {
             return [false, ['CallbackFailed' => 'curl is fail']];
         }
 
@@ -237,15 +217,15 @@ class AliyunOssAdapter extends OssAdapter
         // 拼接待签名字符串
         $path = $request->getRequestUri();
         $pos = strpos($path, '?');
-        if (false === $pos) {
-            $authStr = urldecode($path) . "\n" . $body;
+        if ($pos === false) {
+            $authStr = urldecode($path)."\n".$body;
         } else {
-            $authStr = urldecode(substr($path, 0, $pos)) . substr($path, $pos, strlen($path) - $pos) . "\n" . $body;
+            $authStr = urldecode(substr($path, 0, $pos)).substr($path, $pos, strlen($path) - $pos)."\n".$body;
         }
         // 验证签名
         $ok = openssl_verify($authStr, $authorization, $pubKey, OPENSSL_ALGO_MD5);
 
-        if (1 !== $ok) {
+        if ($ok !== 1) {
             return [false, ['CallbackFailed' => 'verify is fail, Illegal data']];
         }
 

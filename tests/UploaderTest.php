@@ -11,7 +11,7 @@ it('local', function () {
         'callback_url',
         'auth',
         'expire_time',
-        'mime_types'
+        'mime_types',
     ], '本地配置验证成功');
 });
 

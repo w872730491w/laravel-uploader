@@ -2,7 +2,6 @@
 
 namespace Lanyunit\FileSystem\Uploader;
 
-use League\Flysystem\PathPrefixer;
 use Overtrue\Flysystem\Qiniu\QiniuAdapter as QiniuQiniuAdapter;
 
 class QiniuAdapter extends QiniuQiniuAdapter
@@ -15,8 +14,7 @@ class QiniuAdapter extends QiniuQiniuAdapter
         protected $expire_time,
         protected string $prefix,
         protected string $callback_url,
-    ) {
-    }
+    ) {}
 
     public function getTokenConfig($type = null, ?string $key = null, ?array $policy = null, ?string $strictPolice = null)
     {
@@ -26,7 +24,7 @@ class QiniuAdapter extends QiniuQiniuAdapter
             'type' => $allow['type'],
             'key' => '$(key)',
             'hash' => '$(etag)',
-            'url' => rtrim($this->domain) . '/$(key)'
+            'url' => rtrim($this->domain).'/$(key)',
         ];
 
         if ($allow['type'] === 'image') {
@@ -35,7 +33,7 @@ class QiniuAdapter extends QiniuQiniuAdapter
         }
 
         $basePolicy = [
-            'scope' => $this->bucket . ':' . $this->prefix,
+            'scope' => $this->bucket.':'.$this->prefix,
             'isPrefixalScope' => 1,
             'callbackUrl' => $this->normalizeHost($this->callback_url),
             'callbackBodyType' => 'application/json',
@@ -43,14 +41,14 @@ class QiniuAdapter extends QiniuQiniuAdapter
             'fsizeLimit' => (int) $allow['max_size'],
             'insertOnly' => 1,
             'forceSaveKey' => true,
-            'saveKey' => ltrim($this->prefix) . '$(etag)'
+            'saveKey' => ltrim($this->prefix).'$(etag)',
         ];
 
         if ($allow['mimetypes'] && $allow['mimetypes'] !== '*') {
             $basePolicy['mimeLimit'] = is_array($allow['mimetypes']) ? implode(';', $allow['mimetypes']) : $allow['mimetypes'];
         }
 
-        if (!is_null($policy)) {
+        if (! is_null($policy)) {
             $basePolicy = array_merge($basePolicy, $policy);
         }
 
@@ -62,16 +60,16 @@ class QiniuAdapter extends QiniuQiniuAdapter
             'expire_time' => time() + $this->expire_time,
             'domain' => $this->domain,
             'max_size' => $allow['max_size'],
-            'mime_types' => $allow['mimetypes']
+            'mime_types' => $allow['mimetypes'],
         ];
     }
 
     public function normalizeHost($domain): string
     {
-        if (0 !== stripos($domain, 'https://') && 0 !== stripos($domain, 'http://')) {
+        if (stripos($domain, 'https://') !== 0 && stripos($domain, 'http://') !== 0) {
             $domain = "http://{$domain}";
         }
 
-        return rtrim($domain, '/') . '/';
+        return rtrim($domain, '/').'/';
     }
 }

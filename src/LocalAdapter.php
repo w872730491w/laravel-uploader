@@ -2,22 +2,25 @@
 
 namespace Lanyunit\FileSystem\Uploader;
 
-use League\Flysystem\Local\LocalFilesystemAdapter;
-use League\Flysystem\UnixVisibility\VisibilityConverter;
-use League\MimeTypeDetection\MimeTypeDetector;
-use League\Flysystem\PathPrefixer;
-use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-use League\Flysystem\Local\FallbackMimeTypeDetector;
-use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use League\Flysystem\Config;
-use League\Flysystem\UnableToWriteFile;
+use League\Flysystem\Local\FallbackMimeTypeDetector;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\Flysystem\PathPrefixer;
 use League\Flysystem\UnableToSetVisibility;
+use League\Flysystem\UnableToWriteFile;
+use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+use League\Flysystem\UnixVisibility\VisibilityConverter;
+use League\MimeTypeDetection\FinfoMimeTypeDetector;
+use League\MimeTypeDetection\MimeTypeDetector;
 
 class LocalAdapter extends LocalFilesystemAdapter
 {
     private PathPrefixer $prefixer;
+
     private VisibilityConverter $visibility;
+
     private MimeTypeDetector $mimeTypeDetector;
+
     private string $rootLocation;
 
     /**
@@ -27,23 +30,23 @@ class LocalAdapter extends LocalFilesystemAdapter
 
     public function __construct(
         string $location,
-        VisibilityConverter $visibility = null,
-        private int $writeFlags = LOCK_EX,
-        private int $linkHandling = self::DISALLOW_LINKS,
-        MimeTypeDetector $mimeTypeDetector = null,
-        bool $lazyRootCreation = false,
+        ?VisibilityConverter $visibility,
+        private int $writeFlags,
+        private int $linkHandling,
+        ?MimeTypeDetector $mimeTypeDetector,
+        bool $lazyRootCreation,
         protected $expire_time,
         protected $prefix,
         protected string $callback_url,
     ) {
         parent::__construct($location, $visibility, $writeFlags, $linkHandling);
         $this->prefixer = new PathPrefixer($location, DIRECTORY_SEPARATOR);
-        $visibility ??= new PortableVisibilityConverter();
+        $visibility ??= new PortableVisibilityConverter;
         $this->visibility = $visibility;
         $this->rootLocation = $location;
-        $this->mimeTypeDetector = $mimeTypeDetector ?: new FallbackMimeTypeDetector(new FinfoMimeTypeDetector());
+        $this->mimeTypeDetector = $mimeTypeDetector ?: new FallbackMimeTypeDetector(new FinfoMimeTypeDetector);
 
-        if (!$lazyRootCreation) {
+        if (! $lazyRootCreation) {
             $this->ensureRootDirectoryExists();
         }
     }
@@ -58,7 +61,7 @@ class LocalAdapter extends LocalFilesystemAdapter
     }
 
     /**
-     * @param resource|string $contents
+     * @param  resource|string  $contents
      */
     private function writeToFile(string $path, $contents, Config $config): void
     {
@@ -83,7 +86,7 @@ class LocalAdapter extends LocalFilesystemAdapter
         string $path,
         int $mode = \RecursiveIteratorIterator::SELF_FIRST
     ): \Generator {
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -116,7 +119,7 @@ class LocalAdapter extends LocalFilesystemAdapter
     private function setPermissions(string $location, int $visibility): void
     {
         error_clear_last();
-        if (!@chmod($location, $visibility)) {
+        if (! @chmod($location, $visibility)) {
             $extraMessage = error_get_last()['message'] ?? '';
             throw UnableToSetVisibility::atLocation($this->prefixer->stripPrefix($location), $extraMessage);
         }
@@ -124,7 +127,8 @@ class LocalAdapter extends LocalFilesystemAdapter
 
     /**
      * 获取上传配置
-     * @param string $type
+     *
+     * @param  string  $type
      * @return array
      */
     public function getTokenConfig($type = null)
@@ -136,7 +140,7 @@ class LocalAdapter extends LocalFilesystemAdapter
             'maxSize' => $allow['max_size'],
             'callbackUrl' => $this->callback_url,
             'expireTime' => time() + $this->expire_time,
-            'mimeTypes' => $allow['mimetypes']
+            'mimeTypes' => $allow['mimetypes'],
         ];
 
         return [
@@ -146,7 +150,7 @@ class LocalAdapter extends LocalFilesystemAdapter
             'callback_url' => $this->callback_url,
             'auth' => encrypt($policy),
             'expire_time' => $policy['expireTime'],
-            'mime_types' => $allow['mimetypes']
+            'mime_types' => $allow['mimetypes'],
         ];
     }
 }

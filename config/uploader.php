@@ -13,19 +13,19 @@ return [
     'allow' => [
         'audio' => [
             'mime' => ['audio/mpeg'],
-            'max_size' => 30
+            'max_size' => 30,
         ],
         'video' => [
             'mime' => ['video/mp4', 'video/quicktime', 'video/mpeg', 'video/avi'],
-            'max_size' => 30
+            'max_size' => 30,
         ],
         'files' => [
             'mime' => '*',
-            'max_size' => 30
+            'max_size' => 30,
         ],
         'image' => [
             'mime' => ['image/jpeg', 'image/png', 'image/gif'],
-            'max_size' => 30
+            'max_size' => 30,
         ],
-    ]
+    ],
 ];

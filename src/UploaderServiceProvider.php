@@ -2,10 +2,10 @@
 
 namespace Lanyunit\FileSystem\Uploader;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\Filesystem;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class UploaderServiceProvider extends PackageServiceProvider
 {
@@ -25,6 +25,7 @@ class UploaderServiceProvider extends PackageServiceProvider
     {
         app('filesystem')->extend('uploader', function ($app, $config) {
             $adapter = Uploader::getAdapter($config);
+
             return new FilesystemAdapter(new Filesystem($adapter), $adapter, $config);
         });
     }
