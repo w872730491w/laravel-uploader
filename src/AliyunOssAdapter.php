@@ -14,7 +14,7 @@ class AliyunOssAdapter extends OssAdapter
     protected $contentLengthRangeValue;
 
     /**
-     * @throws OssException
+     * @throws \OSS\Core\OssException
      */
     public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, array $buckets = [], ...$params)
     {

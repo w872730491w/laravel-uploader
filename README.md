@@ -62,7 +62,7 @@ return [
             'max_size' => 30, // 30MB
             'expire_time' => 30 * 60, // seconds
             'callback_url' => '', // upload callback url
-            'prefix' => 'image' // upload directory prefix
+            'prefix' => 'image', // upload directory prefix
             'qiniu' => [
                 "bucket" => "your-bucket" // bucket name,
                 "domain" => "your-domain.com" // assets domain,
