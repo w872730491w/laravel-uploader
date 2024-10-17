@@ -1,8 +1,9 @@
 <?php
 
-namespace Lanyunit\FileSystem\Uploader;
+namespace Lanyunit\FileSystem\Uploader\Tests;
 
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+use Lanyunit\FileSystem\Uploader\UploaderServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -11,6 +12,7 @@ class TestCase extends Orchestra
     {
         // make sure, our .env file is loaded
         $app->useEnvironmentPath(__DIR__.'/../');
+        $app->loadEnvironmentFrom('.env');
         $app->bootstrapWith([LoadEnvironmentVariables::class]);
         parent::getEnvironmentSetUp($app);
 
