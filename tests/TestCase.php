@@ -20,7 +20,7 @@ class TestCase extends Orchestra
             'max_size' => 30,
             'expire_time' => 30 * 60,
             'callback_url' => '',
-            'prefix' => 'image',
+            'prefix' => 'example/',
             'local' => [],
             'qiniu' => [
                 'bucket' => 'wwy2121',
