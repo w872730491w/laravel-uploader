@@ -35,7 +35,7 @@ class Callback extends Controller
                 try {
                     $adapter->delete(pathinfo($data['filename'], PATHINFO_BASENAME));
                 } catch (\Throwable $th) {
-                    //throw $th;
+                    // throw $th;
                 }
 
                 return response()->json([
@@ -44,7 +44,7 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => $adapter->normalizeHost() . $data['filename'],
+                'url' => $adapter->normalizeHost().$data['filename'],
             ]);
         }
 
@@ -89,7 +89,7 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => '//' . $post['localtion'],
+                'url' => '//'.$post['localtion'],
             ]);
         }
 
