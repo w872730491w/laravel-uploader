@@ -101,6 +101,7 @@ class Uploader
                 $config['expire_time'],
                 $config['prefix'],
                 $config['callback_url'],
+                $config['upload_url']
             );
         }
 

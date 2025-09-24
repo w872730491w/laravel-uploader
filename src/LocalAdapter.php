@@ -36,6 +36,7 @@ class LocalAdapter extends LocalFilesystemAdapter
         protected $expire_time,
         protected $prefix,
         protected string $callback_url,
+        protected string $upload_url,
     ) {
         parent::__construct($location, $visibility, $writeFlags, $linkHandling, $mimeTypeDetector ?: new FallbackMimeTypeDetector(new FinfoMimeTypeDetector));
         $this->prefixer = new PathPrefixer($location, DIRECTORY_SEPARATOR);
@@ -141,7 +142,7 @@ class LocalAdapter extends LocalFilesystemAdapter
         ];
 
         return [
-            'host' => url('api/upload/put'),
+            'host' => $this->upload_url,
             'prefix' => $this->prefix,
             'max_size' => $allow['max_size'],
             'callback_url' => $this->callback_url,
