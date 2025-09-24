@@ -13,6 +13,8 @@ class AliyunOssAdapter extends OssAdapter
 
     protected $contentLengthRangeValue;
 
+    protected $bucket;
+
     /**
      * @throws \OSS\Core\OssException
      */

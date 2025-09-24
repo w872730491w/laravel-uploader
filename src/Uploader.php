@@ -11,7 +11,7 @@ class Uploader
     /**
      * 获取上传类
      *
-     * @return AliyunOssAdapter|LocalAdapter|QiniuAdapter|TencentCosAdapter
+     * @return AliyunOssAdapter|LocalAdapter|TencentCosAdapter
      *
      * @throws \Lanyunit\FileSystem\Uploader\Exception\UploaderException
      */
@@ -19,7 +19,7 @@ class Uploader
     {
         $type = $baseConfig['type'];
 
-        if (! in_array($type, ['aliyun', 'tencent', 'local', 'qiniu'])) {
+        if (! in_array($type, ['aliyun', 'tencent', 'local'])) {
             throw new UploaderException('不支持此类型');
         }
 

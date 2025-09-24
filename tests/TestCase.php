@@ -22,12 +22,12 @@ class TestCase extends Orchestra
             'callback_url' => '',
             'prefix' => 'example/',
             'local' => [],
-            'qiniu' => [
-                'bucket' => 'wwy2121',
-                'domain' => 'assets.wwy2121.top',
-                'access_key' => env('QINIU_ACCESS_KEY'),
-                'secret_key' => env('QINIU_SECRET_KEY'),
-            ],
+            // 'qiniu' => [
+            //     'bucket' => 'wwy2121',
+            //     'domain' => 'assets.wwy2121.top',
+            //     'access_key' => env('QINIU_ACCESS_KEY'),
+            //     'secret_key' => env('QINIU_SECRET_KEY'),
+            // ],
             'aliyun' => [
                 'bucket' => 'suibian3131',
                 'isCName' => false,

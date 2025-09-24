@@ -48,24 +48,24 @@ class Callback extends Controller
             ]);
         }
 
-        if ($config['type'] === 'qiniu') {
-            /**
-             * @var \Lanyunit\FileSystem\Uploader\QiniuAdapter
-             */
-            $adapter = $storage->getAdapter();
+        // if ($config['type'] === 'qiniu') {
+        //     /**
+        //      * @var \Lanyunit\FileSystem\Uploader\QiniuAdapter
+        //      */
+        //     $adapter = $storage->getAdapter();
 
-            $verify = $adapter->verifyCallback(request()->header('content-type'), request()->header('authorization'), $adapter->normalizeHost($config['callback_url']), request()->getContent());
+        //     $verify = $adapter->verifyCallback(request()->header('content-type'), request()->header('authorization'), $adapter->normalizeHost($config['callback_url']), request()->getContent());
 
-            if (! $verify) {
-                return response()->json(['msg' => 'Unauthorization'], 401);
-            }
+        //     if (! $verify) {
+        //         return response()->json(['msg' => 'Unauthorization'], 401);
+        //     }
 
-            $data = request()->post();
+        //     $data = request()->post();
 
-            return response()->json([
-                'url' => $data['url'],
-            ]);
-        }
+        //     return response()->json([
+        //         'url' => $data['url'],
+        //     ]);
+        // }
 
         if ($config['type'] === 'tencent') {
             $post = request()->post();

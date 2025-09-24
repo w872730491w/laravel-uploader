@@ -50,16 +50,16 @@ it('tencent', function () {
     ], '腾讯cos配置验证成功');
 });
 
-it('qiniu', function () {
-    config()->set('filesystems.disks.uploader.type', 'qiniu');
-    $storage = app('filesystem')->disk('uploader');
-    $res = $storage->getAdapter()->getTokenConfig('image');
-    expect($res)->toBeArray('获取七牛云配置成功')->toHaveKeys([
-        'prefix',
-        'token',
-        'expire_time',
-        'domain',
-        'max_size',
-        'mime_types',
-    ], '七牛云配置验证成功');
-});
+// it('qiniu', function () {
+//     config()->set('filesystems.disks.uploader.type', 'qiniu');
+//     $storage = app('filesystem')->disk('uploader');
+//     $res = $storage->getAdapter()->getTokenConfig('image');
+//     expect($res)->toBeArray('获取七牛云配置成功')->toHaveKeys([
+//         'prefix',
+//         'token',
+//         'expire_time',
+//         'domain',
+//         'max_size',
+//         'mime_types',
+//     ], '七牛云配置验证成功');
+// });

@@ -57,8 +57,6 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo QINIU_ACCESS_KEY="${{ secrets.QINIU_ACCESS_KEY }}" >> .env
-          echo QINIU_SECRET_KEY="${{ secrets.QINIU_SECRET_KEY }}" >> .env
           echo ALIYUN_ACCESS_KEY_ID="${{ secrets.ALIYUN_ACCESS_KEY_ID }}" >> .env
           echo ALIYUN_ACCESS_KEY_SECRET="${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}" >> .env
           echo TENCENT_SECRET_ID="${{ secrets.TENCENT_SECRET_ID }}" >> .env
