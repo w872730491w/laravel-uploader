@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/w872730491w/laravel-uploader/fix-php-code-style-issues.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/w872730491w/laravel-uploader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/lanyunit/laravel-uploader.svg?style=flat-square)](https://packagist.org/packages/lanyunit/laravel-uploader)
 
-Integrate `local`, `Tencent Cloud COS`, `Alibaba Cloud OSS`, and `Qiniu Cloud` uploads
+Integrate `local`, `Tencent Cloud COS`, `Alibaba Cloud OSS` uploads
 
 ## Installation
 
@@ -63,12 +63,12 @@ return [
             'expire_time' => 30 * 60, // seconds
             'callback_url' => '', // upload callback url
             'prefix' => 'image', // upload directory prefix
-            'qiniu' => [
-                "bucket" => "your-bucket" // bucket name,
-                "domain" => "your-domain.com" // assets domain,
-                "access_key" => env('QINIU_ACCESS_KEY'),
-                "secret_key" => env('QINIU_SECRET_KEY')
-            ],
+            // 'qiniu' => [
+            //     "bucket" => "your-bucket" // bucket name,
+            //     "domain" => "your-domain.com" // assets domain,
+            //     "access_key" => env('QINIU_ACCESS_KEY'),
+            //     "secret_key" => env('QINIU_SECRET_KEY')
+            // ],
             'aliyun' => [
                 "bucket" => "your-bucket", // bucket name,
                 "isCName" => false, // is custom domain

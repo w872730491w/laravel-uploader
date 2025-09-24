@@ -44,7 +44,7 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => $adapter->normalizeHost().$data['filename'],
+                'url' => $adapter->normalizeHost() . $data['filename'],
             ]);
         }
 
@@ -89,7 +89,7 @@ class Callback extends Controller
             }
 
             return response()->json([
-                'url' => '//'.$post['localtion'],
+                'url' => '//' . $post['localtion'],
             ]);
         }
 

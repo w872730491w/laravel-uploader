@@ -20,7 +20,6 @@
     "iidestiny/flysystem-oss": "^4.3",
     "illuminate/contracts": "^10.0||^11.0||^12.0",
     "overtrue/flysystem-cos": "^5.1",
-    "overtrue/flysystem-qiniu": "^3.2",
     "qcloud_sts/qcloud-sts-sdk": "^3.0.12",
     "spatie/laravel-package-tools": "^1.16"
   },
