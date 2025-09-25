@@ -139,6 +139,7 @@ class LocalAdapter extends LocalFilesystemAdapter
             'callbackUrl' => $this->callback_url,
             'expireTime' => time() + $this->expire_time,
             'mimeTypes' => $allow['mimetypes'],
+            'type' => $type,
         ];
 
         return [
@@ -149,6 +150,7 @@ class LocalAdapter extends LocalFilesystemAdapter
             'auth' => encrypt($policy),
             'expire_time' => $policy['expireTime'],
             'mime_types' => $allow['mimetypes'],
+            'type' => $type,
         ];
     }
 }

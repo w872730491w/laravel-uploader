@@ -52,7 +52,9 @@ class TencentCosAdapter extends CosAdapter
                 'token' => $tempKeys['credentials']['sessionToken'],
                 'maxSize' => $allow['max_size'],
                 'mimeTypes' => $allow['mimetypes'],
+                'type' => $type,
             ]),
+            'type' => $type,
         ];
 
         return $res;
