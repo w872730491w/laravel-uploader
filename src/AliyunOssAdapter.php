@@ -52,7 +52,7 @@ class AliyunOssAdapter extends OssAdapter
         if ($this->isCName) {
             $domain = $this->endpoint;
         } else {
-            $domain = $this->bucket . '.' . $this->endpoint;
+            $domain = $this->bucket.'.'.$this->endpoint;
         }
 
         if ($this->useSSL) {
@@ -61,7 +61,7 @@ class AliyunOssAdapter extends OssAdapter
             $domain = "http://{$domain}";
         }
 
-        return rtrim($domain, '/') . '/';
+        return rtrim($domain, '/').'/';
     }
 
     /**
@@ -100,8 +100,8 @@ class AliyunOssAdapter extends OssAdapter
         ];
         if (! empty($customData)) {
             foreach ($customData as $key => $value) {
-                $callbackVar['x:' . $key] = $value;
-                $data[$key] = '${x:' . $key . '}';
+                $callbackVar['x:'.$key] = $value;
+                $data[$key] = '${x:'.$key.'}';
             }
         }
 
@@ -222,15 +222,16 @@ class AliyunOssAdapter extends OssAdapter
         $path = $request->getRequestUri();
         $pos = strpos($path, '?');
         if ($pos === false) {
-            $authStr = urldecode($path) . "\n" . $body;
+            $authStr = urldecode($path)."\n".$body;
         } else {
-            $authStr = urldecode(substr($path, 0, $pos)) . substr($path, $pos, strlen($path) - $pos) . "\n" . $body;
+            $authStr = urldecode(substr($path, 0, $pos)).substr($path, $pos, strlen($path) - $pos)."\n".$body;
         }
         // 验证签名
         $ok = openssl_verify($authStr, $authorization, $pubKey, OPENSSL_ALGO_MD5);
 
         if ($ok !== 1) {
             curl_close($ch);
+
             return [false, ['CallbackFailed' => 'verify is fail, Illegal data']];
         }
 
