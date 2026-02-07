@@ -11,7 +11,7 @@ class TestCase extends Orchestra
     protected function getEnvironmentSetUp($app)
     {
         // make sure, our .env file is loaded
-        $app->useEnvironmentPath(__DIR__ . '/../');
+        $app->useEnvironmentPath(__DIR__.'/../');
         $app->bootstrapWith([LoadEnvironmentVariables::class]);
 
         config()->set('filesystems.disks.uploader', [

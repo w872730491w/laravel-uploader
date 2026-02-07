@@ -131,7 +131,7 @@ class LocalAdapter extends LocalFilesystemAdapter
     {
         $allow = Uploader::getAllowType($type);
 
-        $path = (new PathPrefixer($this->prefix, DIRECTORY_SEPARATOR))->prefixPath($path . DIRECTORY_SEPARATOR);
+        $path = (new PathPrefixer($this->prefix, DIRECTORY_SEPARATOR))->prefixPath($path.DIRECTORY_SEPARATOR);
 
         return [
             'driver' => 'local',
