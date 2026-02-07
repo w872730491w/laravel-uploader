@@ -35,8 +35,6 @@ class LocalAdapter extends LocalFilesystemAdapter
         bool $lazyRootCreation,
         protected $expire_time,
         protected $prefix,
-        protected string $callback_url,
-        protected string $upload_url,
     ) {
         parent::__construct($location, $visibility, $writeFlags, $linkHandling, $mimeTypeDetector ?: new FallbackMimeTypeDetector(new FinfoMimeTypeDetector));
         $this->prefixer = new PathPrefixer($location, DIRECTORY_SEPARATOR);
@@ -129,28 +127,22 @@ class LocalAdapter extends LocalFilesystemAdapter
      * @param  string  $type
      * @return array
      */
-    public function getTokenConfig($type = null)
+    public function getTokenConfig($type, string $path = '/', string $upload_url = '')
     {
         $allow = Uploader::getAllowType($type);
 
-        $policy = [
-            'allowPrefix' => $this->prefix,
-            'maxSize' => $allow['max_size'],
-            'callbackUrl' => $this->callback_url,
-            'expireTime' => time() + $this->expire_time,
-            'mimeTypes' => $allow['mimetypes'],
-            'type' => $type,
-        ];
+        $path = (new PathPrefixer($this->prefix, DIRECTORY_SEPARATOR))->prefixPath($path . DIRECTORY_SEPARATOR);
 
         return [
-            'host' => $this->upload_url,
-            'prefix' => $this->prefix,
-            'max_size' => $allow['max_size'],
-            'callback_url' => $this->callback_url,
-            'auth' => encrypt($policy),
-            'expire_time' => $policy['expireTime'],
-            'mime_types' => $allow['mimetypes'],
-            'type' => $type,
+            'driver' => 'local',
+            'config' => [
+                'host' => $upload_url,
+                'prefix' => $path,
+                'max_size' => $allow['max_size'],
+                'expire_time' => time() + $this->expire_time,
+                'mime_types' => $allow['mimetypes'],
+                'type' => $type,
+            ],
         ];
     }
 }

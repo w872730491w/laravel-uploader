@@ -11,16 +11,15 @@ class TestCase extends Orchestra
     protected function getEnvironmentSetUp($app)
     {
         // make sure, our .env file is loaded
-        $app->useEnvironmentPath(__DIR__.'/../');
+        $app->useEnvironmentPath(__DIR__ . '/../');
         $app->bootstrapWith([LoadEnvironmentVariables::class]);
 
         config()->set('filesystems.disks.uploader', [
             'driver' => 'uploader',
             'type' => 'local',
-            'max_size' => 30,
             'expire_time' => 30 * 60,
             'callback_url' => '',
-            'prefix' => 'example/',
+            'prefix' => 'test/',
             'local' => [],
             // 'qiniu' => [
             //     'bucket' => 'wwy2121',
@@ -29,18 +28,20 @@ class TestCase extends Orchestra
             //     'secret_key' => env('QINIU_SECRET_KEY'),
             // ],
             'aliyun' => [
-                'bucket' => 'suibian3131',
-                'isCName' => false,
-                'endpoint' => 'oss-cn-shanghai.aliyuncs.com',
-                'access_key_id' => env('ALIYUN_ACCESS_KEY_ID'),
-                'access_key_secret' => env('ALIYUN_ACCESS_KEY_SECRET'),
+                'x-oss-forbid-overwrite' => (bool) env('ALIYUN_FORBID_OVERWRITE', true),
+                'success_action_status' => (int) env('ALIYUN_SUCCESS_ACTION_STATUS', 200),
+                'bucket' => env('ALIYUN_BUCKET', ''),
+                'isCName' => (bool) env('ALIYUN_IS_CNAME', false),
+                'endpoint' => env('ALIYUN_ENDPOINT', 'oss-cn-hangzhou.aliyuncs.com'),
+                'access_key_id' => env('ALIYUN_ACCESS_KEY_ID', ''),
+                'access_key_secret' => env('ALIYUN_ACCESS_KEY_SECRET', ''),
             ],
             'tencent' => [
-                'app_id' => '1300854817',
-                'bucket' => 'file-1300854817',
-                'region' => 'ap-beijing',
-                'secret_id' => env('TENCENT_SECRET_ID'),
-                'secret_key' => env('TENCENT_SECRET_KEY'),
+                'app_id' => env('TENCENT_APP_ID', ''),
+                'bucket' => env('TENCENT_BUCKET', ''),
+                'region' => env('TENCENT_REGION', 'ap-beijing'),
+                'secret_id' => env('TENCENT_SECRET_ID', ''),
+                'secret_key' => env('TENCENT_SECRET_KEY', ''),
             ],
         ]);
     }

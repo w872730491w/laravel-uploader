@@ -1,6 +1,6 @@
 {
   "name": "lanyunit/laravel-uploader",
-  "description": "集成cos、oss、七牛云、本地上传的包",
+  "description": "集成cos、oss、本地上传的包",
   "keywords": [
     "laravel",
     "lanyunit",
@@ -17,11 +17,11 @@
   ],
   "require": {
     "php": "^8.2",
-    "iidestiny/flysystem-oss": "^4.3",
+    "iidestiny/flysystem-oss": "^4.8.2",
     "illuminate/contracts": "^10.0||^11.0||^12.0",
-    "overtrue/flysystem-cos": "^5.1",
+    "overtrue/flysystem-cos": "^5.2.0",
     "qcloud_sts/qcloud-sts-sdk": "^3.0.12",
-    "spatie/laravel-package-tools": "^1.16"
+    "spatie/laravel-package-tools": "^1.92.7"
   },
   "require-dev": {
     "laravel/pint": "^1.14",

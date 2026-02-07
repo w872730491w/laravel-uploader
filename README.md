@@ -58,30 +58,36 @@ return [
        //...
        'uploader' => [
             'driver' => 'uploader',
-            'type' => 'local', // local tencent qiniu aliyun
-            'max_size' => 30, // 30MB
-            'expire_time' => 30 * 60, // seconds
-            'callback_url' => '', // upload callback url
-            'prefix' => 'image', // upload directory prefix
+            'type' => 'local',
+            'max_size' => 30,
+            'expire_time' => 30 * 60,
+            'callback_url' => '',
+            'prefix' => 'image/',
+            'local' => [],
             // 'qiniu' => [
-            //     "bucket" => "your-bucket" // bucket name,
-            //     "domain" => "your-domain.com" // assets domain,
+            //     "bucket" => env('QINIU_BUCKET') // bucket name,
+            //     "domain" => env('QINIU_DOMAIN') // assets domain,
             //     "access_key" => env('QINIU_ACCESS_KEY'),
             //     "secret_key" => env('QINIU_SECRET_KEY')
             // ],
             'aliyun' => [
-                "bucket" => "your-bucket", // bucket name,
-                "isCName" => false, // is custom domain
-                "endpoint" => "oss-cn-shanghai.aliyuncs.com", // your bucket endpoint
-                "access_key_id" => env('ALIYUN_ACCESS_KEY_ID'),
-                "access_key_secret" => env('ALIYUN_ACCESS_KEY_SECRET')
+                'x-oss-forbid-overwrite' => (bool) env('ALIYUN_FORBID_OVERWRITE', true),
+                'success_action_status' => (int) env('ALIYUN_SUCCESS_ACTION_STATUS', 200),
+                'bucket' => env('ALIYUN_BUCKET', ''),
+                'isCName' => (bool) env('ALIYUN_IS_CNAME', false),
+                'endpoint' => env('ALIYUN_ENDPOINT', 'oss-cn-hangzhou.aliyuncs.com'),
+                'access_key_id' => env('ALIYUN_ACCESS_KEY_ID', ''),
+                'access_key_secret' => env('ALIYUN_ACCESS_KEY_SECRET', ''),
             ],
             'tencent' => [
-                "app_id" => "your-app-id", // tencent app id
-                "bucket" => "your-bucket", // bucket name,
-                "region" => "ap-beijing", // bucket region
-                "secret_id" => env('TENCENT_SECRET_ID'),
-                "secret_key" => env('TENCENT_SECRET_KEY')
+                'signed_url' => env('TENCENT_SIGNED_URL', ''),
+                'use_https' => env('TENCENT_USE_HTTPS', true),
+                'domain' => env("TENCENT_DOMAIN", null),
+                'app_id' => env('TENCENT_APP_ID', ''),
+                'bucket' => env('TENCENT_BUCKET', ''),
+                'region' => env('TENCENT_REGION', 'ap-beijing'),
+                'secret_id' => env('TENCENT_SECRET_ID', ''),
+                'secret_key' => env('TENCENT_SECRET_KEY', ''),
             ]
        ],
        //...

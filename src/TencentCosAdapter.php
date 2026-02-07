@@ -11,7 +11,7 @@ class TencentCosAdapter extends CosAdapter
     {
         $allow = Uploader::getAllowType($type);
 
-        $path = (new PathPrefixer($this->config['prefix'], DIRECTORY_SEPARATOR))->prefixPath($path);
+        $path = (new PathPrefixer($this->config['prefix'], '/'))->prefixPath($path . '/');
 
         $config = \array_merge([
             'url' => 'https://sts.tencentcloudapi.com/', // url和domain保持一致
@@ -40,21 +40,19 @@ class TencentCosAdapter extends CosAdapter
         $tempKeys = (new \QCloud\COSSTS\Sts)->getTempKeys($config);
 
         $res = [
-            'callback_url' => $this->config['callback_url'],
-            'bucket' => $config['bucket'], // 换成你的 bucket
-            'region' => $config['region'], // 换成 bucket 所在园区
-            'path' => $path,
-            'tempKeys' => $tempKeys,
-            'mime_types' => $allow['mimetypes'],
-            'max_size' => $allow['max_size'],
-            'expire_time' => $tempKeys['expiredTime'],
-            'auth' => encrypt([
-                'token' => $tempKeys['credentials']['sessionToken'],
-                'maxSize' => $allow['max_size'],
-                'mimeTypes' => $allow['mimetypes'],
+            'driver' => 'tencent',
+            'config' => [
+                'prefix' => $path,
+                'mime_types' => $allow['mimetypes'],
+                'max_size' => $allow['max_size'],
+                'expire_time' => $tempKeys['expiredTime'],
                 'type' => $type,
-            ]),
-            'type' => $type,
+                'tencent' => [
+                    'bucket' => $config['bucket'], // 换成你的 bucket
+                    'region' => $config['region'], // 换成 bucket 所在园区
+                    'tempKeys' => $tempKeys,
+                ]
+            ],
         ];
 
         return $res;

@@ -15,21 +15,24 @@ class AliyunOssAdapter extends OssAdapter
 
     protected $bucket;
 
+    protected $forbidOverwrite;
+
     /**
      * @throws \OSS\Core\OssException
      */
-    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, array $buckets = [], ...$params)
+    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, array $buckets = [], bool $forbidOverwrite = false, ...$params)
     {
         $this->accessKeyId = $accessKeyId;
         $this->accessKeySecret = $accessKeySecret;
         $this->endpoint = $endpoint;
         $this->bucket = $bucket;
         $this->isCName = $isCName;
-        $this->prefixer = new PathPrefixer($prefix, DIRECTORY_SEPARATOR);
+        $this->prefixer = new PathPrefixer($prefix, '/');
         $this->buckets = $buckets;
         $this->callBackUrl = $callBackUrl;
         $this->expire = $expire;
         $this->params = $params;
+        $this->forbidOverwrite = $forbidOverwrite;
         $this->initClient();
         $this->checkEndpoint();
     }
@@ -39,9 +42,9 @@ class AliyunOssAdapter extends OssAdapter
      *
      * @return string
      */
-    public function getDir()
+    public function getDir(string $path = '/')
     {
-        return ltrim($this->prefixer->prefixPath(''), '/');
+        return ltrim($this->prefixer->prefixPath($path . '/'), '/');
     }
 
     /**
@@ -52,7 +55,7 @@ class AliyunOssAdapter extends OssAdapter
         if ($this->isCName) {
             $domain = $this->endpoint;
         } else {
-            $domain = $this->bucket.'.'.$this->endpoint;
+            $domain = $this->bucket . '.' . $this->endpoint;
         }
 
         if ($this->useSSL) {
@@ -61,7 +64,7 @@ class AliyunOssAdapter extends OssAdapter
             $domain = "http://{$domain}";
         }
 
-        return rtrim($domain, '/').'/';
+        return rtrim($domain, '/') . '/';
     }
 
     /**
@@ -72,11 +75,11 @@ class AliyunOssAdapter extends OssAdapter
      *
      * @throws \InvalidArgumentException
      */
-    public function getTokenConfig($type = null, array $customData = [], array $systemData = [])
+    public function getTokenConfig($type = null, $path = '/', array $customData = [], array $systemData = [])
     {
         $allow = Uploader::getAllowType($type);
 
-        $prefix = $this->getDir();
+        $prefix = $this->getDir($path);
 
         // 系统参数
         $system = [];
@@ -100,18 +103,21 @@ class AliyunOssAdapter extends OssAdapter
         ];
         if (! empty($customData)) {
             foreach ($customData as $key => $value) {
-                $callbackVar['x:'.$key] = $value;
-                $data[$key] = '${x:'.$key.'}';
+                $callbackVar['x:' . $key] = $value;
+                $data[$key] = '${x:' . $key . '}';
             }
         }
 
-        $callbackParam = [
-            'callbackUrl' => $this->callBackUrl,
-            'callbackBody' => urldecode(http_build_query(array_merge($system, $data))),
-            'callbackBodyType' => 'application/x-www-form-urlencoded',
-        ];
-        $callbackString = json_encode($callbackParam);
-        $base64CallbackBody = base64_encode($callbackString);
+        if (! empty($this->callBackUrl)) {
+            $callbackParam = [
+                'callbackUrl' => $this->callBackUrl,
+                'callbackBody' => urldecode(http_build_query(array_merge($system, $data))),
+                'callbackBodyType' => 'application/x-www-form-urlencoded',
+            ];
+            $callbackString = json_encode($callbackParam);
+            $base64CallbackBody = base64_encode($callbackString);
+        }
+
 
         $now = time();
         $end = $now + $this->expire;
@@ -134,18 +140,20 @@ class AliyunOssAdapter extends OssAdapter
         $conditions[] = $start;
 
         // 允许上传的文件类型 mimeType
-        $allowTypes = [];
-        foreach ($allow['mimetypes'] as $v) {
-            if (strpos('/*', $v) === false) {
-                $allowTypes[] = $v;
+        if (is_array($allow['mimetypes'])) {
+            $allowTypes = [];
+            foreach ($allow['mimetypes'] as $v) {
+                if (strpos('/*', $v) === false) {
+                    $allowTypes[] = $v;
+                }
             }
+            $contentType = [
+                0 => 'in',
+                1 => '$content-type',
+                2 => $allowTypes,
+            ];
+            $conditions[] = $contentType;
         }
-        $contentType = [
-            0 => 'in',
-            1 => '$content-type',
-            2 => $allowTypes,
-        ];
-        $conditions[] = $contentType;
 
         $arr = [
             'expiration' => $expiration,
@@ -158,18 +166,26 @@ class AliyunOssAdapter extends OssAdapter
 
         $response = [];
         $response['accessid'] = $this->accessKeyId;
-        $response['host'] = $this->normalizeHost();
         $response['policy'] = $base64Policy;
         $response['signature'] = $signature;
-        $response['expire_time'] = $end;
-        $response['callback'] = $base64CallbackBody;
-        $response['callback-var'] = $callbackVar;
-        $response['mime_types'] = $allow['mimetypes'];
-        $response['max_size'] = $allow['max_size'];
-        $response['dir'] = $prefix;  // 这个参数是设置用户上传文件时指定的前缀。
-        $response['type'] = $type;
+        if (isset($base64CallbackBody)) {
+            $response['callback'] = $base64CallbackBody;
+            $response['callback-var'] = $callbackVar;
+        }
+        $response['forbid_overwrite'] = $this->forbidOverwrite;
 
-        return $response;
+        return [
+            'driver' => 'aliyun',
+            'config' => [
+                'host' => $this->normalizeHost(),
+                'type' => $type,
+                'prefix' => $prefix,
+                'max_size' => $allow['max_size'],
+                'mime_types' => $allow['mimetypes'],
+                'expire_time' => $end,
+                'aliyun' => $response,
+            ]
+        ];
     }
 
     /**
@@ -222,9 +238,9 @@ class AliyunOssAdapter extends OssAdapter
         $path = $request->getRequestUri();
         $pos = strpos($path, '?');
         if ($pos === false) {
-            $authStr = urldecode($path)."\n".$body;
+            $authStr = urldecode($path) . "\n" . $body;
         } else {
-            $authStr = urldecode(substr($path, 0, $pos)).substr($path, $pos, strlen($path) - $pos)."\n".$body;
+            $authStr = urldecode(substr($path, 0, $pos)) . substr($path, $pos, strlen($path) - $pos) . "\n" . $body;
         }
         // 验证签名
         $ok = openssl_verify($authStr, $authorization, $pubKey, OPENSSL_ALGO_MD5);

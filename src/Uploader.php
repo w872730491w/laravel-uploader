@@ -24,9 +24,9 @@ class Uploader
         }
 
         $config = $baseConfig[$type];
-        $config['expire_time'] = $baseConfig['expire_time'];
-        $config['callback_url'] = $baseConfig['callback_url'];
-        $config['prefix'] = $baseConfig['prefix'];
+        $config['expire_time'] = $baseConfig['expire_time'] ?? 30 * 60;
+        $config['callback_url'] = $baseConfig['callback_url'] ?? '';
+        $config['prefix'] = $baseConfig['prefix'] ?? '/';
 
         if ($type === 'aliyun') {
             $root = isset($config['prefix']) ? ltrim($config['prefix'], '/') : null;
@@ -36,11 +36,12 @@ class Uploader
                 $config['access_key_secret'],
                 $config['endpoint'],
                 $config['bucket'],
-                $config['isCName'],
+                $config['isCName'] ?? false,
                 $root,
                 $config['callback_url'],
                 $config['expire_time'],
-                []
+                [],
+                $config['x-oss-forbid-overwrite'] ?? false,
             );
         }
 
@@ -52,16 +53,15 @@ class Uploader
                 'region' => $config['region'],
                 'bucket' => $config['bucket'],
                 // 可选，如果 bucket 为私有访问请打开此项
-                'signed_url' => false,
+                'signed_url' => (bool) isset($config['signed_url']) ? $config['signed_url'] : false,
                 // 可选，是否使用 https，默认 false
-                'use_https' => true,
+                'use_https' => (bool) isset($config['use_https']) ? $config['use_https'] : true,
                 // 可选，自定义域名
-                'domain' => $config['domain'] ?? null,
+                'domain' => isset($config['domain']) ? $config['domain'] : null,
                 // 可选，使用 CDN 域名时指定生成的 URL host
                 'cdn' => $config['cdn'] ?? null,
                 'prefix' => $config['prefix'] ?? '/',
                 'expire_time' => $config['expire_time'],
-                'callback_url' => $config['callback_url'],
             ];
 
             $adapter = new TencentCosAdapter($config);
@@ -100,8 +100,6 @@ class Uploader
                 false,
                 $config['expire_time'],
                 $config['prefix'],
-                $config['callback_url'],
-                $config['upload_url']
             );
         }
 
