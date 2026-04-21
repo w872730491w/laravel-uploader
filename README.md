@@ -62,14 +62,8 @@ return [
             'max_size' => 30,
             'expire_time' => 30 * 60,
             'callback_url' => '',
-            'prefix' => 'image/',
+            'dir_prefix' => 'image/',
             'local' => [],
-            // 'qiniu' => [
-            //     "bucket" => env('QINIU_BUCKET') // bucket name,
-            //     "domain" => env('QINIU_DOMAIN') // assets domain,
-            //     "access_key" => env('QINIU_ACCESS_KEY'),
-            //     "secret_key" => env('QINIU_SECRET_KEY')
-            // ],
             'aliyun' => [
                 'x-oss-forbid-overwrite' => (bool) env('ALIYUN_FORBID_OVERWRITE', true),
                 'success_action_status' => (int) env('ALIYUN_SUCCESS_ACTION_STATUS', 200),

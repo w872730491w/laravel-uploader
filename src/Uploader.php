@@ -26,7 +26,7 @@ class Uploader
         $config = $baseConfig[$type];
         $config['expire_time'] = $baseConfig['expire_time'] ?? 30 * 60;
         $config['callback_url'] = $baseConfig['callback_url'] ?? '';
-        $config['prefix'] = $baseConfig['prefix'] ?? '/';
+        $config['prefix'] = $baseConfig['dir_prefix'] ?? '/';
 
         if ($type === 'aliyun') {
             $root = isset($config['prefix']) ? ltrim($config['prefix'], '/') : null;
@@ -38,9 +38,9 @@ class Uploader
                 $config['bucket'],
                 $config['isCName'] ?? false,
                 $root,
+                [],
                 $config['callback_url'],
                 $config['expire_time'],
-                [],
                 $config['x-oss-forbid-overwrite'] ?? false,
             );
         }

@@ -16,10 +16,10 @@ class TestCase extends Orchestra
 
         config()->set('filesystems.disks.uploader', [
             'driver' => 'uploader',
-            'type' => 'local',
+            'type' => 'aliyun',
             'expire_time' => 30 * 60,
             'callback_url' => '',
-            'prefix' => 'test/',
+            'dir_prefix' => 'test/',
             'local' => [],
             // 'qiniu' => [
             //     'bucket' => 'wwy2121',

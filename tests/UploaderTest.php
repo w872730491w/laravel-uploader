@@ -4,7 +4,7 @@ it('local', function () {
     config()->set('filesystems.disks.uploader.type', 'local');
     $storage = app('filesystem')->disk('uploader');
     $res = $storage->getAdapter()->getTokenConfig('image');
-    dump(json_encode($res, JSON_UNESCAPED_UNICODE));
+
     expect($res)->toBeArray()->toHaveKeys([
         'driver',
         'config',
@@ -20,7 +20,6 @@ it('aliyun', function () {
     config()->set('filesystems.disks.uploader.type', 'aliyun');
     $storage = app('filesystem')->disk('uploader');
     $res = $storage->getAdapter()->getTokenConfig('files');
-    dump(json_encode($res, JSON_UNESCAPED_UNICODE));
 
     expect($res)->toBeArray()->toHaveKeys([
         'driver',
@@ -42,7 +41,6 @@ it('tencent', function () {
     config()->set('filesystems.disks.uploader.type', 'tencent');
     $storage = app('filesystem')->disk('uploader');
     $res = $storage->getAdapter()->getTokenConfig('files');
-    dump(json_encode($res, JSON_UNESCAPED_UNICODE));
 
     expect($res)->toBeArray()->toHaveKeys([
         'driver',
@@ -71,3 +69,21 @@ it('tencent', function () {
 //         'mime_types',
 //     ]);
 // });
+
+it('server upload aliyun', function () {
+    config()->set('filesystems.disks.uploader.type', 'aliyun');
+    $storage = app('filesystem')->disk('uploader');
+    $result = $storage->put('test.txt', 'test');
+
+    expect($result)->toBeTrue();
+    expect($storage->url('test.txt'))->toContain('test.txt');
+});
+
+it('server upload tencent', function () {
+    config()->set('filesystems.disks.uploader.type', 'tencent');
+    $storage = app('filesystem')->disk('uploader');
+    $result = $storage->put('test.txt', 'test');
+
+    expect($result)->toBeTrue();
+    expect($storage->url('test.txt'))->toContain('test.txt');
+});

@@ -3,7 +3,6 @@
 namespace Lanyunit\FileSystem\Uploader;
 
 use Iidestiny\Flysystem\Oss\OssAdapter;
-use League\Flysystem\PathPrefixer;
 
 class AliyunOssAdapter extends OssAdapter
 {
@@ -13,28 +12,17 @@ class AliyunOssAdapter extends OssAdapter
 
     protected $contentLengthRangeValue;
 
-    protected $bucket;
-
     protected $forbidOverwrite;
 
     /**
      * @throws \OSS\Core\OssException
      */
-    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', $callBackUrl = '', int $expire = 30, array $buckets = [], bool $forbidOverwrite = false, ...$params)
+    public function __construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, bool $isCName = false, string $prefix = '', array $buckets = [], $callBackUrl = '', int $expire = 30, bool $forbidOverwrite = false, ...$params)
     {
-        $this->accessKeyId = $accessKeyId;
-        $this->accessKeySecret = $accessKeySecret;
-        $this->endpoint = $endpoint;
-        $this->bucket = $bucket;
-        $this->isCName = $isCName;
-        $this->prefixer = new PathPrefixer($prefix, '/');
-        $this->buckets = $buckets;
+        parent::__construct($accessKeyId, $accessKeySecret, $endpoint, $bucket, $isCName, $prefix, $buckets, ...$params);
         $this->callBackUrl = $callBackUrl;
         $this->expire = $expire;
-        $this->params = $params;
         $this->forbidOverwrite = $forbidOverwrite;
-        $this->initClient();
-        $this->checkEndpoint();
     }
 
     /**
@@ -55,7 +43,7 @@ class AliyunOssAdapter extends OssAdapter
         if ($this->isCName) {
             $domain = $this->endpoint;
         } else {
-            $domain = $this->bucket.'.'.$this->endpoint;
+            $domain = $this->bucketName.'.'.$this->endpoint;
         }
 
         if ($this->useSSL) {
@@ -245,14 +233,10 @@ class AliyunOssAdapter extends OssAdapter
         $ok = openssl_verify($authStr, $authorization, $pubKey, OPENSSL_ALGO_MD5);
 
         if ($ok !== 1) {
-            curl_close($ch);
-
             return [false, ['CallbackFailed' => 'verify is fail, Illegal data']];
         }
 
         parse_str($body, $data);
-
-        curl_close($ch);
 
         return [true, $data];
     }
