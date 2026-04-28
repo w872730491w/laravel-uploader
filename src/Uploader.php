@@ -46,6 +46,7 @@ class Uploader
         }
 
         if ($type === 'tencent') {
+            $prefix = $config['prefix'] ?? '/';
             $config = [
                 'app_id' => $config['app_id'],
                 'secret_id' => $config['secret_id'],
@@ -60,7 +61,7 @@ class Uploader
                 'domain' => isset($config['domain']) ? $config['domain'] : null,
                 // 可选，使用 CDN 域名时指定生成的 URL host
                 'cdn' => $config['cdn'] ?? null,
-                'prefix' => $config['prefix'] ?? '/',
+                'prefix' => $prefix === '/' ? '' : $prefix,
                 'expire_time' => $config['expire_time'],
             ];
 
