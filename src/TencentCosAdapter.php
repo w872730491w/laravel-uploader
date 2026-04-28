@@ -11,7 +11,7 @@ class TencentCosAdapter extends CosAdapter
     {
         $allow = Uploader::getAllowType($type);
 
-        $path = (new PathPrefixer($this->config['prefix'], '/'))->prefixPath($path.'/');
+        $path = new PathPrefixer($path, DIRECTORY_SEPARATOR);
 
         $config = \array_merge([
             'url' => 'https://sts.tencentcloudapi.com/', // url和domain保持一致
