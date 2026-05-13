@@ -40,6 +40,7 @@ class TestCase extends Orchestra
                 'app_id' => env('TENCENT_APP_ID', ''),
                 'bucket' => env('TENCENT_BUCKET', ''),
                 'region' => env('TENCENT_REGION', 'ap-beijing'),
+                'domain' => env('TENCENT_DOMAIN', ''),
                 'secret_id' => env('TENCENT_SECRET_ID', ''),
                 'secret_key' => env('TENCENT_SECRET_KEY', ''),
             ],

@@ -54,11 +54,11 @@ class Uploader
                 'region' => $config['region'],
                 'bucket' => $config['bucket'],
                 // 可选，如果 bucket 为私有访问请打开此项
-                'signed_url' => (bool) isset($config['signed_url']) ? $config['signed_url'] : false,
+                'signed_url' => (bool) ($config['signed_url'] ?? false),
                 // 可选，是否使用 https，默认 false
-                'use_https' => (bool) isset($config['use_https']) ? $config['use_https'] : true,
+                'use_https' => (bool) ($config['use_https'] ?? false),
                 // 可选，自定义域名
-                'domain' => isset($config['domain']) ? $config['domain'] : null,
+                'domain' => $config['domain'] ?? null,
                 // 可选，使用 CDN 域名时指定生成的 URL host
                 'cdn' => $config['cdn'] ?? null,
                 'prefix' => $prefix === '/' ? '' : $prefix,

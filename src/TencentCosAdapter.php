@@ -2,7 +2,6 @@
 
 namespace Lanyunit\FileSystem\Uploader;
 
-use League\Flysystem\PathPrefixer;
 use Overtrue\Flysystem\Cos\CosAdapter;
 
 class TencentCosAdapter extends CosAdapter
@@ -48,6 +47,7 @@ class TencentCosAdapter extends CosAdapter
                 'expire_time' => $tempKeys['expiredTime'],
                 'type' => $type,
                 'tencent' => [
+                    'domain' => $this->getObjectClient()->getBaseUri(),
                     'bucket' => $config['bucket'], // 换成你的 bucket
                     'region' => $config['region'], // 换成 bucket 所在园区
                     'tempKeys' => $tempKeys,
