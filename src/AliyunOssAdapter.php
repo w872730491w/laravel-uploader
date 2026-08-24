@@ -3,6 +3,7 @@
 namespace Lanyunit\FileSystem\Uploader;
 
 use Iidestiny\Flysystem\Oss\OssAdapter;
+use League\Flysystem\PathPrefixer;
 
 class AliyunOssAdapter extends OssAdapter
 {
@@ -14,6 +15,8 @@ class AliyunOssAdapter extends OssAdapter
 
     protected $forbidOverwrite;
 
+    protected $prefix;
+
     /**
      * @throws \OSS\Core\OssException
      */
@@ -23,6 +26,7 @@ class AliyunOssAdapter extends OssAdapter
         $this->callBackUrl = $callBackUrl;
         $this->expire = $expire;
         $this->forbidOverwrite = $forbidOverwrite;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -67,7 +71,7 @@ class AliyunOssAdapter extends OssAdapter
     {
         $allow = Uploader::getAllowType($type);
 
-        $prefix = $this->getDir($path);
+        $prefix = ltrim((new PathPrefixer($this->prefix, '/'))->prefixPath($path.'/'), '/');
 
         // 系统参数
         $system = [];
