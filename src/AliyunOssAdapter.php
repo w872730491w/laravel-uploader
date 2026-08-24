@@ -30,16 +30,6 @@ class AliyunOssAdapter extends OssAdapter
     }
 
     /**
-     * getDir
-     *
-     * @return string
-     */
-    public function getDir(string $path = '/')
-    {
-        return ltrim($this->prefixer->prefixPath($path.'/'), '/');
-    }
-
-    /**
      * normalize Host.
      */
     public function normalizeHost(): string
